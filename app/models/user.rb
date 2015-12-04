@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
 
   before_create :ensure_auth_token!
 
+  enum privilege: [:unassigned, :captain, :organizer]
 
   private
 
