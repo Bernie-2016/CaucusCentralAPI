@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'auth_helper'
 
-RSpec.describe Api::SessionsController, type: :controller do
+RSpec.describe SessionsController, type: :controller do
   include AuthHelper
 
   context 'confirmed user' do
