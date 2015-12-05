@@ -23,7 +23,7 @@ RSpec.describe Api::SessionsController, type: :controller do
 
         body = JSON.parse(response.body)
 
-        expect(body['auth_token']).to eq(user.auth_token)
+        expect(body['token']).to eq("#{user.id}:#{user.auth_token}")
       end
 
       it 'should fail without a valid password' do
