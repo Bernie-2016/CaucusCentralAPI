@@ -10,5 +10,7 @@ Fabricator(:confirmed_user, from: :user) do
   first_name 'Clark'
   last_name  'Kent'
   email      { sequence(:email) { |i| "clark#{i}@thedailyplanet.com" } }
-  confirmation_token Time.now
+  password   'lexluthorisajerk'
+  auth_token { sequence(:auth_token) { |i| "lexreallyisatotaljerk#{i}" } }
+  confirmed_at Time.now
 end
