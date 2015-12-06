@@ -1,5 +1,6 @@
 class SessionsController < Devise::SessionsController
   include ActionController::MimeResponds
+  include AuthConcern
 
   skip_before_filter :authenticate_user_from_token!, only: [:create]
   before_filter :ensure_params_exist, only: [:create]
