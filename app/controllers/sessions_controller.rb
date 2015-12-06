@@ -1,4 +1,6 @@
-class Api::SessionsController < ApplicationController
+class SessionsController < Devise::SessionsController
+  include ActionController::MimeResponds
+
   skip_before_filter :authenticate_user_from_token!, only: [:create]
   before_filter :ensure_params_exist, only: [:create]
 
@@ -14,6 +16,11 @@ class Api::SessionsController < ApplicationController
     end
 
     invalid_login_attempt
+  end
+
+  def destroy
+    sign_out(resource_name)
+    render(json: { success: true })
   end
 
 

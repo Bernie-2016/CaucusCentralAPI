@@ -1,8 +1,12 @@
 require 'rails_helper'
 require 'auth_helper'
 
-RSpec.describe Api::SessionsController, type: :controller do
+RSpec.describe SessionsController, type: :controller do
   include AuthHelper
+
+  before(:each) do
+    request.env['devise.mapping'] = Devise.mappings[:user]
+  end
 
   context 'confirmed user' do
     let!(:user) { Fabricate(:confirmed_user) }
@@ -54,6 +58,14 @@ RSpec.describe Api::SessionsController, type: :controller do
         body = JSON.parse(response.body)
 
         expect(body['message']).to eq('Malformed request')
+      end
+    end
+
+    describe '#destroy' do
+      it 'should be successful' do
+        delete(:destroy, format: :json)
+
+        expect(response).to be_successful
       end
     end
   end
