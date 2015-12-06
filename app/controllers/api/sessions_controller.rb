@@ -1,4 +1,4 @@
-class SessionsController < Devise::SessionsController
+class Api::SessionsController < ApplicationController
   skip_before_filter :authenticate_user_from_token!, only: [:create]
   before_filter :ensure_params_exist, only: [:create]
 
