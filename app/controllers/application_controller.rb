@@ -6,7 +6,6 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
-
   private
 
   def configure_permitted_parameters

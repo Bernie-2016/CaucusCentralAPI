@@ -24,6 +24,6 @@ module AuthConcern
 
   def auth_error
     warden.custom_failure! if performed?
-    render(json: {error: 'unauthorized'}, status: 401)
+    render(json: { error: 'unauthorized' }, status: 401)
   end
 end
