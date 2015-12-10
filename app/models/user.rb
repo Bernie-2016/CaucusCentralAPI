@@ -4,14 +4,14 @@ class User < ActiveRecord::Base
 
   before_create :ensure_auth_token!
 
+  validates :email, :first_name, :last_name, presence: true, allow_blank: false
+
   enum privilege: [:unassigned, :captain, :organizer]
 
   private
 
   def ensure_auth_token!
-    if auth_token.blank?
-      self.auth_token = generate_auth_token
-    end
+    self.auth_token = generate_auth_token if auth_token.blank?
   end
 
   def generate_auth_token

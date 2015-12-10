@@ -19,4 +19,7 @@ group :development, :test do
   gem 'guard-brakeman'
   gem 'guard-rspec', require: false
   gem 'rspec-rails', '~> 3.0'
+  gem 'pry-rails'
+  gem 'pry-nav'
+  gem 'pry-stack_explorer'
 end
