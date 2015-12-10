@@ -158,6 +158,3 @@ DEPENDENCIES
   rspec-rails (~> 3.0)
   simplecov
   spring
-
-BUNDLED WITH
-   1.10.0
