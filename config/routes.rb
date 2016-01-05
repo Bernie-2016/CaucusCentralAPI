@@ -12,7 +12,11 @@ Rails.application.routes.draw do
     namespace :api do
       namespace :v1 do
         resources :invitations, only: [:create]
-        resources :sessions, only: [:create, :destroy]
+        resources :sessions, only: [:create] do
+          collection do
+            delete :destroy
+          end
+        end
       end
     end
   end

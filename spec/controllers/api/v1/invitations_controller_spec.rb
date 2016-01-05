@@ -1,9 +1,6 @@
 require 'rails_helper'
-require 'auth_helper'
 
-describe Api::V1::InvitationsController, type: :controller do
-  include AuthHelper
-
+describe Api::V1::InvitationsController do
   before(:each) do
     request.env['devise.mapping'] = Devise.mappings[:user]
   end

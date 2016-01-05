@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+describe User do
   context 'when creating a new user' do
     subject(:user) { Fabricate(:confirmed_user) }
 
