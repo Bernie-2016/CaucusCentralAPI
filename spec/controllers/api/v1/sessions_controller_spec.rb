@@ -13,7 +13,7 @@ describe Api::V1::SessionsController do
         expect(subject).to have_http_status(200)
       end
 
-      it 'returns success message, token, and user info' do
+      it 'returns token, and user info' do
         expect(subject.body).to include_json(
           user: {
             token: user.reload.tokens.first.token,

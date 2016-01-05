@@ -3,11 +3,11 @@ ruby '2.2.3'
 
 gem 'rails', '4.2.4'
 
-gem 'active_model_serializers', '~> 0.8.0'
 gem 'bcrypt'
 gem 'cancancan'
 gem 'figaro'
 gem 'foreigner'
+gem 'jbuilder'
 gem 'pg'
 gem 'rails-api'
 gem 'simplecov', require: false

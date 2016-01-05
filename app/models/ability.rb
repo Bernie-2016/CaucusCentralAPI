@@ -20,5 +20,9 @@ class Ability
     can :destroy, Token do |token|
       user == token.user
     end
+
+    can :manage, User do |u|
+      user == u
+    end
   end
 end

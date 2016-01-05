@@ -67,7 +67,7 @@ describe Api::V1::PrecinctsController do
       before { login Fabricate(:captain) }
 
       it 'returns unauthorized' do
-        expect(subject.code).to eq('403')
+        expect(subject).to have_http_status(403)
       end
     end
   end
@@ -108,7 +108,7 @@ describe Api::V1::PrecinctsController do
       before { login Fabricate(:captain) }
 
       it 'returns unauthorized' do
-        expect(subject.code).to eq('403')
+        expect(subject).to have_http_status(403)
       end
     end
   end
@@ -124,7 +124,7 @@ describe Api::V1::PrecinctsController do
 
       context 'with valid params' do
         it 'updates the precinct' do
-          expect(subject.code).to eq('200')
+          expect(subject).to have_http_status(200)
           expect(precinct.reload.name).to eq('Des Moines 2')
         end
 
@@ -156,14 +156,14 @@ describe Api::V1::PrecinctsController do
         before { precinct.users << captain }
 
         it 'updates the precinct' do
-          expect(subject.code).to eq('200')
+          expect(subject).to have_http_status(200)
           expect(precinct.reload.name).to eq('Des Moines 2')
         end
       end
 
       context 'user does not own precinct' do
         it 'returns unauthorized' do
-          expect(subject.code).to eq('403')
+          expect(subject).to have_http_status(403)
         end
       end
     end
@@ -178,7 +178,7 @@ describe Api::V1::PrecinctsController do
       before { login Fabricate(:organizer) }
 
       it 'returns 204' do
-        expect(subject.code).to eq('204')
+        expect(subject).to have_http_status(204)
       end
 
       it 'destroys the precinct' do
@@ -195,7 +195,7 @@ describe Api::V1::PrecinctsController do
         before { precinct.users << captain }
 
         it 'returns 204' do
-          expect(subject.code).to eq('204')
+          expect(subject).to have_http_status(204)
         end
 
         it 'destroys the precinct' do
@@ -205,7 +205,7 @@ describe Api::V1::PrecinctsController do
 
       context 'user does not own precinct' do
         it 'returns unauthorized' do
-          expect(subject.code).to eq('403')
+          expect(subject).to have_http_status(403)
         end
       end
     end

@@ -10,12 +10,12 @@ module Api
           else
             current_user.precincts
           end
-        render json: precincts
+        render :index, locals: { precincts: precincts }
       end
 
       def show
         authorize! :read, current_precinct
-        render json: current_precinct
+        render :show, locals: { precinct: current_precinct }
       end
 
       def create
@@ -23,7 +23,7 @@ module Api
         authorize! :create, precinct
 
         if precinct.save
-          render json: precinct, status: :created, location: api_v1_precinct_url(precinct)
+          render :show, locals: { precinct: precinct }, status: :created, location: api_v1_precinct_url(precinct)
         else
           render json: precinct.errors, status: :unprocessable_entity
         end
@@ -33,7 +33,7 @@ module Api
         authorize! :update, current_precinct
 
         if current_precinct.update(precinct_params)
-          render json: current_precinct, status: :ok, location: api_v1_precinct_url(current_precinct)
+          render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
         else
           render json: current_precinct.errors, status: :unprocessable_entity
         end

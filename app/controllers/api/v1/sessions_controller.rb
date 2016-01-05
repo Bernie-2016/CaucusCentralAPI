@@ -7,11 +7,11 @@ module Api
       def create
         user = User.find_by(email: params[:email])
         if user && user.authenticate(params[:password])
-          user.tokens.create
+          token = user.tokens.create
+          render :create, locals: { user: user, token: token }
         else
           render_unauthenticated!
         end
-        render json: user, serializer: UserSerializer
       end
 
       def destroy

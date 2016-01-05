@@ -20,8 +20,6 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    active_model_serializers (0.8.3)
-      activemodel (>= 3.0)
     activejob (4.2.4)
       activesupport (= 4.2.4)
       globalid (>= 0.3.0)
@@ -100,6 +98,9 @@ GEM
       tilt
     highline (1.7.8)
     i18n (0.7.0)
+    jbuilder (2.4.0)
+      activesupport (>= 3.0.0, < 5.1)
+      multi_json (~> 1.2)
     json (1.8.3)
     listen (3.0.5)
       rb-fsevent (>= 0.9.3)
@@ -237,7 +238,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers (~> 0.8.0)
   awesome_print
   bcrypt
   cancancan
@@ -248,6 +248,7 @@ DEPENDENCIES
   guard
   guard-brakeman
   guard-rspec
+  jbuilder
   pg
   pry-nav
   pry-rails
@@ -259,3 +260,6 @@ DEPENDENCIES
   rubocop
   simplecov
   spring
+
+BUNDLED WITH
+   1.10.6

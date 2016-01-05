@@ -21,5 +21,7 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 
+  config.render_views = true
+
   config.include AuthHelper
 end
