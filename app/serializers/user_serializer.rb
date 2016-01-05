@@ -1,7 +1,7 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :email, :token
+  attributes :first_name, :last_name, :email, :token
 
   def token
-    "#{object.id}:#{object.auth_token}"
+    object.tokens.first.try(:token)
   end
 end

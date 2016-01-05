@@ -1,29 +1,16 @@
 Rails.application.routes.draw do
-  root to: 'session#create'
-
-  devise_for :users,
-    defaults: { format: :json },
-    controllers: {
-      invitations: 'api/v1/invitations',
-      sessions: 'api/v1/sessions'
-    }
-
-  devise_scope :user do
-    namespace :api do
-      namespace :v1 do
-        resources :invitations, only: [:create]
-        resources :sessions, only: [:create] do
-          collection do
-            delete :destroy
-          end
-        end
-      end
-    end
-  end
-
+  get '/404', to: 'errors#error_404'
+  get '/422', to: 'errors#error_422'
+  get '/500', to: 'errors#error_500'
+  
   namespace :api do
     namespace :v1 do
       resources :precincts, except: [:new, :edit]
+      resources :sessions, only: [:create] do
+        collection do
+          delete :destroy
+        end
+      end
     end
   end
 end

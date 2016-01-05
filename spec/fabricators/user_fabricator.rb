@@ -3,14 +3,14 @@ Fabricator(:user) do
   last_name 'Wayne'
   email { sequence(:email) { |i| "bruce#{i}@thebatcave.com" } }
   password 'aquamansuxsomuch'
-  auth_token { sequence(:auth_token) { |i| "aquamansuxevenmorethanyouknow#{i}" } }
+  password_confirmation 'aquamansuxsomuch'
+  privilege :unassigned
 end
 
-Fabricator(:confirmed_user, from: :user) do
-  first_name 'Clark'
-  last_name 'Kent'
-  email { sequence(:email) { |i| "clark#{i}@thedailyplanet.com" } }
-  password 'lexluthorisajerk'
-  auth_token { sequence(:auth_token) { |i| "lexreallyisatotaljerk#{i}" } }
-  confirmed_at Time.now
+Fabricator(:captain, from: :user) do
+  privilege :captain
+end
+
+Fabricator(:organizer, from: :user) do
+  privilege :organizer
 end

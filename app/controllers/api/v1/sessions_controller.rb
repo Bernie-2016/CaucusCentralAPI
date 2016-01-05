@@ -1,42 +1,23 @@
 module Api
   module V1
-    class SessionsController < Devise::SessionsController
-      include ActionController::MimeResponds
-      include AuthConcern
-
-      skip_before_filter :authenticate_user_from_token!, only: [:create]
-      before_filter :ensure_params_exist, only: [:create]
+    class SessionsController < ApplicationController
+      skip_before_action :authenticate!, only: [:create]
+      skip_authorization_check only: [:create]
 
       def create
-        resource = User.find_by(email: params[:user_login][:email])
-        return invalid_login_attempt unless resource
-
-        if resource.valid_password?(params[:user_login][:password])
-          sign_in(:user, resource)
-
-          render(json: resource, serializer: UserSerializer, root: false)
-          return
+        user = User.find_by(email: params[:email])
+        if user && user.authenticate(params[:password])
+          token = user.tokens.create
+        else
+          render_unauthenticated!
         end
-
-        invalid_login_attempt
+        render json: user, serializer: UserSerializer
       end
 
       def destroy
-        sign_out(resource_name)
-        render(json: { success: true })
-      end
-
-      private
-
-      def invalid_login_attempt
-        warden.custom_failure!
-        render(json: { success: false, message: 'Incorrect email and/or password' }, status: 401)
-      end
-
-      def ensure_params_exist
-        return unless params[:user_login].blank? || params[:user_login][:email].blank? || params[:user_login][:password].blank?
-
-        render(json: { success: false, message: 'Malformed request' }, status: 422)
+        authorize! :destroy, current_token
+        current_token.destroy
+        head :ok
       end
     end
   end

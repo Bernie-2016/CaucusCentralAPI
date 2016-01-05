@@ -1,68 +1,68 @@
 require 'rails_helper'
 
 describe Api::V1::SessionsController do
-  before(:each) do
-    request.env['devise.mapping'] = Devise.mappings[:user]
+  let!(:user) { Fabricate(:user, email: 'john@smith.com', password: 'password', password_confirmation: 'password') }
+
+  describe '#create' do
+    subject { post :create, credentials }
+
+    context 'with valid credentials' do
+      let(:credentials) { { email: 'john@smith.com', password: 'password' } }
+
+      it 'returns 200' do
+        expect(subject).to have_http_status(200)
+      end
+
+      it 'returns success message, token, and user info' do
+        expect(subject.body).to include_json(
+          user: {
+            token: user.reload.tokens.first.token,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email
+          }
+        )
+      end
+
+      it 'logs in the user' do
+        expect { subject }.to change { user.tokens.count }.by(1)
+      end
+    end
+
+    context 'with invalid credentials' do
+      let(:credentials) { { email: 'john@smith.com', password: 'wrong' } }
+
+      it 'returns 403' do
+        expect(subject).to have_http_status(403)
+      end
+
+      it 'does not log in the user' do
+        expect { subject }.to change { user.tokens.count }.by(0)
+      end
+    end
   end
 
-  context 'confirmed user' do
-    let!(:user) { Fabricate(:confirmed_user) }
+  describe '#destroy' do
+    subject { delete :destroy }
 
-    before(:each) do
-      http_login(user)
-    end
+    context 'with no user logged in' do
+      let(:token) { nil }
 
-    describe '#create' do
-      it 'should return an auth token given a valid password' do
-        post(
-          :create,
-          format: :json,
-          user_login: { email: user.email, password: user.password }
-        )
-
-        expect(response).to be_successful
-
-        body = JSON.parse(response.body)
-
-        expect(body['token']).to eq("#{user.id}:#{user.auth_token}")
-      end
-
-      it 'should fail without a valid password' do
-        post(
-          :create,
-          format: :json,
-          user_login: { email: user.email, password: 'verywrongpassword' }
-        )
-
-        expect(response).to_not be_successful
-        expect(response.status).to eq(401)
-
-        body = JSON.parse(response.body)
-
-        expect(body['message']).to eq('Incorrect email and/or password')
-      end
-
-      it 'should fail if the request is malformed' do
-        post(
-          :create,
-          format: :json,
-          blahblah: { someone: 'thisiswhoiam', letmein: 'lalallaa' }
-        )
-
-        expect(response).to_not be_successful
-        expect(response.status).to eq(422)
-
-        body = JSON.parse(response.body)
-
-        expect(body['message']).to eq('Malformed request')
+      it 'returns 403' do
+        expect(subject).to have_http_status(403)
       end
     end
 
-    describe '#destroy' do
-      it 'should be successful' do
-        delete(:destroy, format: :json)
+    context 'with user logged in' do
+      let(:token) { Fabricate(:token, user: user) }
+      before { request.headers['Authorization'] = token.token }
 
-        expect(response).to be_successful
+      it 'returns 200' do
+        expect(subject).to have_http_status(200)
+      end
+
+      it 'destroys the token' do
+        expect { subject }.to change { user.tokens.count }.by(-1)
       end
     end
   end

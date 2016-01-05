@@ -4,8 +4,3 @@ Fabricator(:precinct) do
   supporting_attendees 99
   total_attendees      100
 end
-
-Fabricator(:invalid_precinct, from: :precinct) do
-  name                 ""
-  county               ""
-end

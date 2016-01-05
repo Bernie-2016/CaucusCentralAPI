@@ -1,7 +1,5 @@
 module AuthHelper
-  def http_login(user)
-    id = user.id
-    token = user.auth_token
-    request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(id, token)
+  def login(user = Fabricate(:user))
+    request.headers['Authorization'] = Fabricate(:token, user: user).token
   end
 end
