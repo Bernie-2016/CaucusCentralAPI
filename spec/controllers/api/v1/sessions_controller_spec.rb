@@ -57,8 +57,8 @@ describe Api::V1::SessionsController do
       let(:token) { Fabricate(:token, user: user) }
       before { request.headers['Authorization'] = token.token }
 
-      it 'returns 200' do
-        expect(subject).to have_http_status(200)
+      it 'returns 204' do
+        expect(subject).to have_http_status(204)
       end
 
       it 'destroys the token' do

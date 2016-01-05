@@ -17,7 +17,7 @@ module Api
       def destroy
         authorize! :destroy, current_token
         current_token.destroy
-        head :ok
+        head :no_content
       end
     end
   end
