@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'auth_helper'
 
-RSpec.describe SessionsController, type: :controller do
+describe Api::V1::SessionsController, type: :controller do
   include AuthHelper
 
   before(:each) do
