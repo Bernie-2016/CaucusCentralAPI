@@ -112,4 +112,102 @@ describe Api::V1::PrecinctsController do
       end
     end
   end
+
+  describe '#update' do
+    let!(:precinct) { Fabricate(:precinct, name: 'Des Moines 1', county: 'Polk') }
+    let(:params) { { name: 'Des Moines 2' } }
+
+    subject { post :update, id: precinct.id, precinct: params }
+
+    context 'user is organizer' do
+      before { login Fabricate(:organizer) }
+
+      context 'with valid params' do
+        it 'updates the precinct' do
+          expect(subject.code).to eq('200')
+          expect(precinct.reload.name).to eq('Des Moines 2')
+        end
+
+        it 'returns the precinct' do
+          expect(subject.body).to include_json(
+            precinct: {
+              name: 'Des Moines 2',
+              county: 'Polk'
+            }
+          )
+        end
+      end
+
+      context 'with invalid params' do
+        let(:params) { { } }
+
+        it 'returns unprocessable' do
+          expect(subject.code).to eq('422')
+        end
+      end
+    end
+
+    context 'user is captain' do
+      let!(:captain) { Fabricate(:captain) }
+
+      before { login captain }
+
+      context 'user owns precinct' do
+        before { precinct.users << captain }
+
+        it 'updates the precinct' do
+          expect(subject.code).to eq('200')
+          expect(precinct.reload.name).to eq('Des Moines 2')
+        end
+      end
+
+      context 'user does not own precinct' do
+        it 'returns unauthorized' do
+          expect(subject.code).to eq('403')
+        end
+      end
+    end
+  end
+
+  describe '#destroy' do
+    let!(:precinct) { Fabricate(:precinct) }
+
+    subject { delete :destroy, id: precinct.id }
+
+    context 'user is organizer' do
+      before { login Fabricate(:organizer) }
+
+      it 'returns 204' do
+        expect(subject.code).to eq('204')
+      end
+
+      it 'destroys the precinct' do
+        expect{ subject }.to change{ Precinct.count }.by(-1)
+      end
+    end
+
+    context 'user is captain' do
+      let!(:captain) { Fabricate(:captain) }
+
+      before { login captain }
+
+      context 'user owns precinct' do
+        before { precinct.users << captain }
+
+        it 'returns 204' do
+          expect(subject.code).to eq('204')
+        end
+
+        it 'destroys the precinct' do
+          expect{ subject }.to change{ Precinct.count }.by(-1)
+        end
+      end
+
+      context 'user does not own precinct' do
+        it 'returns unauthorized' do
+          expect(subject.code).to eq('403')
+        end
+      end
+    end
+  end
 end

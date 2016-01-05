@@ -13,6 +13,12 @@ class ApplicationController < ActionController::API
     end
   end
 
+  rescue_from ActionController::ParameterMissing do |exception|
+    catch :halt do
+      render json: { exception.param => 'is required' }, status: 422
+    end
+  end
+
   def render(*args)
     super
     throw :halt
