@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/Bernie-2016/CaucusCentralAPI.svg?style=svg)](https://circleci.com/gh/Bernie-2016/CaucusCentralAPI)
+
 # CaucusCentralAPI
 
 Caucus Central is an app to allow caucus precinct captains to quickly and easily calculate and share their candidate's viability with a campaign headquarters.
