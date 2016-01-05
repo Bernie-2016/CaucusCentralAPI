@@ -14,6 +14,7 @@ gem 'spring', :group => :development
 
 group :development, :test do
   gem 'awesome_print'
+  gem 'dotenv-rails'
   gem 'fabrication'
   gem 'guard'
   gem 'guard-brakeman'
