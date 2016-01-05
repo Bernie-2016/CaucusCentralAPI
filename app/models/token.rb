@@ -12,10 +12,10 @@ class Token < ActiveRecord::Base
   private
 
   def generate_token!
-    return unless self.token.blank?
+    return unless token.blank?
     loop do
       self.token = SecureRandom.hex(128)
-      break self.token unless Token.exists?(token: self.token)
+      break token unless Token.exists?(token: token)
     end
   end
 end

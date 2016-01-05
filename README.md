@@ -27,6 +27,7 @@ SECRET_TOKEN=some_token
 ### Testing
 
 * `bundle exec rspec` to run tests
+* `bundle exec rubocop` for linting
 
 ## Contributing
 

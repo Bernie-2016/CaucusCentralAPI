@@ -24,7 +24,7 @@ module CaucusCentralAPI
     config.active_record.raise_in_transactional_callbacks = true
 
     config.generators do |g|
-      g.test_framework      :rspec, fixture: true
+      g.test_framework :rspec, fixture: true
       g.fixture_replacement :fabrication
       g.assets = false
       g.helper = false

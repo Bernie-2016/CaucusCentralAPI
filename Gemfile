@@ -27,4 +27,5 @@ group :development, :test do
   gem 'pry-rails'
   gem 'pry-nav'
   gem 'pry-stack_explorer'
+  gem 'rubocop'
 end

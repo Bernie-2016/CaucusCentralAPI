@@ -139,7 +139,7 @@ describe Api::V1::PrecinctsController do
       end
 
       context 'with invalid params' do
-        let(:params) { { } }
+        let(:params) { {} }
 
         it 'returns unprocessable' do
           expect(subject.code).to eq('422')
@@ -182,7 +182,7 @@ describe Api::V1::PrecinctsController do
       end
 
       it 'destroys the precinct' do
-        expect{ subject }.to change{ Precinct.count }.by(-1)
+        expect { subject }.to change { Precinct.count }.by(-1)
       end
     end
 
@@ -199,7 +199,7 @@ describe Api::V1::PrecinctsController do
         end
 
         it 'destroys the precinct' do
-          expect{ subject }.to change{ Precinct.count }.by(-1)
+          expect { subject }.to change { Precinct.count }.by(-1)
         end
       end
 

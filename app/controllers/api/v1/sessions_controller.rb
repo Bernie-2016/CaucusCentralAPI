@@ -7,7 +7,7 @@ module Api
       def create
         user = User.find_by(email: params[:email])
         if user && user.authenticate(params[:password])
-          token = user.tokens.create
+          user.tokens.create
         else
           render_unauthenticated!
         end
