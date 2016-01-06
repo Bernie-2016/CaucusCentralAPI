@@ -26,17 +26,8 @@ describe Api::V1::PrecinctsController do
     end
 
     context 'user is captain' do
-      let!(:precincts) { Fabricate.times(5, :precinct) }
-      let!(:captain) do
-        Fabricate(:captain) do
-          precincts { Fabricate.times(5, :precinct) }
-        end
-      end
-
-      before { login captain }
-
-      it 'returns only their precincts' do
-        expect(JSON.parse(subject.body)['precincts'].length).to eq(5)
+      it 'returns unauthorized' do
+        expect(subject).to have_http_status(403)
       end
     end
   end

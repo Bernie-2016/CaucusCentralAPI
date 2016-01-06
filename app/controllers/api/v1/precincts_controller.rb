@@ -4,13 +4,8 @@ module Api
       skip_authorization_check only: [:index]
 
       def index
-        precincts =
-          if current_user.organizer?
-            Precinct.all
-          else
-            current_user.precincts
-          end
-        render :index, locals: { precincts: precincts }
+        render_unauthenticated! unless current_user.organizer?
+        render :index, locals: { precincts: Precinct.all }
       end
 
       def show
