@@ -10,6 +10,7 @@ gem 'foreigner'
 gem 'jbuilder'
 gem 'pg'
 gem 'rails-api'
+gem 'roadie-rails'
 gem 'simplecov', require: false
 
 group :development do

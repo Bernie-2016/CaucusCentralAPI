@@ -1,9 +1,10 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'help@berniesanders.com'
+  include Roadie::Rails::Automatic
+
+  default from: 'no-reply@berniesanders.com'
 
   def invite(invitation_id)
     @invitation = Invitation.find invitation_id
-    mail to: @invitation.email,
-         subject: 'Invitation to Caucus Central'
+    mail to: @invitation.email, subject: 'Invitation to Caucus Central'
   end
 end

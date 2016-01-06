@@ -30,6 +30,15 @@ describe Api::V1::InvitationsController do
             }
           )
         end
+
+        it 'sends mail' do
+          expect { subject }.to change { ActionMailer::Base.deliveries.count }.by(1)
+        end
+
+        it 'includes token in mail' do
+          subject
+          expect(ActionMailer::Base.deliveries.last.body.encoded).to match(Invitation.last.token)
+        end
       end
 
       context 'with invalid params' do
