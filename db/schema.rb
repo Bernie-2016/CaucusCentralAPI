@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106034934) do
+ActiveRecord::Schema.define(version: 20160106180823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,10 +29,11 @@ ActiveRecord::Schema.define(version: 20160106034934) do
   create_table "precincts", id: :bigserial, force: :cascade do |t|
     t.string   "name"
     t.string   "county"
-    t.integer  "total_attendees"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "total_attendees", default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.text     "delegate_counts"
+    t.integer  "total_delegates", default: 0
   end
 
   create_table "tokens", id: :bigserial, force: :cascade do |t|

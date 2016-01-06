@@ -19,7 +19,8 @@ describe Api::V1::PrecinctsController do
             id: precincts.first.id,
             name: precincts.first.name,
             county: precincts.first.county,
-            total_attendees: precincts.first.total_attendees
+            total_attendees: precincts.first.total_attendees,
+            total_delegates: precincts.first.total_delegates
           }]
         )
       end
@@ -46,7 +47,8 @@ describe Api::V1::PrecinctsController do
             id: precinct.id,
             name: precinct.name,
             county: precinct.county,
-            total_attendees: precinct.total_attendees
+            total_attendees: precinct.total_attendees,
+            total_delegates: precinct.total_delegates
           }
         )
       end
@@ -103,8 +105,8 @@ describe Api::V1::PrecinctsController do
   end
 
   describe '#update' do
-    let!(:precinct) { Fabricate(:precinct, name: 'Des Moines 1', county: 'Polk') }
-    let(:params) { { name: 'Des Moines 2', delegate_counts: [{ key: 'sanders', supporters: 25 }] } }
+    let!(:precinct) { Fabricate(:precinct, name: 'Des Moines 1', county: 'Polk', total_attendees: 100, total_delegates: 5) }
+    let(:params) { { name: 'Des Moines 2', delegate_counts: [{ key: 'sanders', supporters: 75 }] } }
 
     subject { patch :update, id: precinct.id, precinct: params }
 
@@ -125,7 +127,8 @@ describe Api::V1::PrecinctsController do
               delegate_counts: [{
                 key: 'sanders',
                 name: 'Bernie Sanders',
-                supporters: 25
+                supporters: 75,
+                delegates_won: 4
               }]
             }
           )

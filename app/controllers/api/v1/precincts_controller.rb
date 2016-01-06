@@ -55,7 +55,7 @@ module Api
       end
 
       def precinct_params
-        params.require(:precinct).permit(:name, :county, :total_attendees)
+        params.require(:precinct).permit(:name, :county, :total_attendees, :total_delegates)
       end
     end
   end
