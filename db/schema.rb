@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20160106034934) do
     t.integer  "precinct_id"
   end
 
-  create_table "precincts", force: :cascade do |t|
+  create_table "precincts", id: :bigserial, force: :cascade do |t|
     t.string   "name"
     t.string   "county"
     t.integer  "total_attendees"
@@ -48,8 +48,8 @@ ActiveRecord::Schema.define(version: 20160106034934) do
     t.string  "email"
     t.string  "password_digest"
     t.integer "privilege"
-    t.integer "invitation_id"
     t.integer "precinct_id"
+    t.integer "invitation_id"
   end
 
   add_index "users", ["precinct_id"], name: "index_users_on_precinct_id", using: :btree
