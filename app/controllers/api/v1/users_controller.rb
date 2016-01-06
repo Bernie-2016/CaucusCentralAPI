@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      skip_authorization_check only: [:index]
+      skip_authorization_check only: [:index, :create]
 
       def index
         render_unauthenticated! unless current_user.organizer?
