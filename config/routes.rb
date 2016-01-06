@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  get '/404', to: 'errors#error_404'
-  get '/422', to: 'errors#error_422'
-  get '/500', to: 'errors#error_500'
+  %w(404 422 500).each do |code|
+    get code, to: "errors#error_#{code}"
+  end
 
   namespace :api do
     namespace :v1 do
