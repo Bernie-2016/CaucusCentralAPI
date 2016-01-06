@@ -8,7 +8,8 @@ describe Api::V1::InvitationsController do
   end
 
   describe '#create' do
-    let(:params) { { invitation: { email: 'bernie@berniesanders.com', privilege: 'captain' } } }
+    let!(:precinct) { Fabricate(:precinct) }
+    let(:params) { { invitation: { email: 'bernie@berniesanders.com', privilege: 'captain', precinct_id: precinct.id } } }
 
     subject { post :create, params }
 
@@ -24,7 +25,8 @@ describe Api::V1::InvitationsController do
           expect(subject.body).to include_json(
             invitation: {
               email: 'bernie@berniesanders.com',
-              privilege: 'captain'
+              privilege: 'captain',
+              precinct_id: precinct.id
             }
           )
         end

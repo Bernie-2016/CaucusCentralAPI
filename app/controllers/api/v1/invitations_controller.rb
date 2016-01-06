@@ -17,7 +17,7 @@ module Api
 
       def invitation_params
         # No need to check privilege because only organizers can invite users
-        params.require(:invitation).permit(:email, :privilege)
+        params.require(:invitation).permit(:email, :privilege, :precinct_id)
       end
     end
   end

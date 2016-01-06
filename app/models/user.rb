@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
 
   def invitation_token=(token)
     self.invitation = Invitation.find_by_token(token)
-    self.privilege = invitation.privilege if invitation
+    if invitation
+      self.privilege = invitation.privilege
+      self.precinct_id = invitation.precinct_id
+    end
   end
 end

@@ -13,6 +13,10 @@ describe User do
       it 'assigns the privilege of its invitation' do
         expect(user.privilege).to eq invitation.privilege
       end
+
+      it 'assigns the precinct_id of its invitation' do
+        expect(user.precinct_id).to eq invitation.precinct_id
+      end
     end
 
     context 'without an invitation token' do
