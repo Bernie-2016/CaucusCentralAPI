@@ -131,7 +131,7 @@ describe Api::V1::PrecinctsController do
             precinct: {
               name: 'Des Moines 2',
               county: 'Polk',
-              candidates: [{
+              delegate_counts: [{
                 key: 'sanders',
                 name: 'Bernie Sanders',
                 supporters: 25
