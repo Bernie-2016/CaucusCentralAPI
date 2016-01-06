@@ -11,6 +11,12 @@ Rails.application.routes.draw do
           delete :destroy
         end
       end
+      resources :users do
+        collection do
+          get :profile
+          patch :profile, to: 'users#update_profile'
+        end
+      end
     end
   end
 end

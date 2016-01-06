@@ -82,7 +82,7 @@ describe Api::V1::PrecinctsController do
 
       context 'with valid params' do
         it 'creates the precinct' do
-          expect(subject.code).to eq('201')
+          expect(subject).to have_http_status(201)
         end
 
         it 'returns the precinct' do
@@ -99,7 +99,7 @@ describe Api::V1::PrecinctsController do
         let(:params) { { name: 'Des Moines 1' } }
 
         it 'returns unprocessable' do
-          expect(subject.code).to eq('422')
+          expect(subject).to have_http_status(422)
         end
       end
     end
@@ -117,7 +117,7 @@ describe Api::V1::PrecinctsController do
     let!(:precinct) { Fabricate(:precinct, name: 'Des Moines 1', county: 'Polk') }
     let(:params) { { name: 'Des Moines 2' } }
 
-    subject { post :update, id: precinct.id, precinct: params }
+    subject { patch :update, id: precinct.id, precinct: params }
 
     context 'user is organizer' do
       before { login Fabricate(:organizer) }
@@ -142,7 +142,7 @@ describe Api::V1::PrecinctsController do
         let(:params) { {} }
 
         it 'returns unprocessable' do
-          expect(subject.code).to eq('422')
+          expect(subject).to have_http_status(422)
         end
       end
     end

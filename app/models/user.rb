@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   has_and_belongs_to_many :precincts
-  has_many :tokens
+  has_many :tokens, dependent: :destroy
 
   default_scope -> { order(last_name: :asc) }
 
