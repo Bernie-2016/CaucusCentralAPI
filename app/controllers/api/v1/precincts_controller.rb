@@ -33,6 +33,13 @@ module Api
         authorize! :update, current_precinct
 
         if current_precinct.update(precinct_params)
+          # Update delegate counts
+          current_precinct.delegate_counts ||= {}
+          (params[:precinct][:delegate_counts] || []).each do |delegate|
+            next unless Candidate.keys.include? delegate['key']
+            current_precinct.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
+          end
+          current_precinct.save
           render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
         else
           render json: current_precinct.errors, status: :unprocessable_entity
@@ -53,7 +60,7 @@ module Api
       end
 
       def precinct_params
-        params.require(:precinct).permit(:name, :county, :supporting_attendees, :total_attendees)
+        params.require(:precinct).permit(:name, :county, :total_attendees)
       end
     end
   end

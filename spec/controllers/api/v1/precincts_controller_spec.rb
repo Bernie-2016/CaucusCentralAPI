@@ -19,7 +19,6 @@ describe Api::V1::PrecinctsController do
             id: precincts.first.id,
             name: precincts.first.name,
             county: precincts.first.county,
-            supporting_attendees: precincts.first.supporting_attendees,
             total_attendees: precincts.first.total_attendees
           }]
         )
@@ -56,7 +55,6 @@ describe Api::V1::PrecinctsController do
             id: precinct.id,
             name: precinct.name,
             county: precinct.county,
-            supporting_attendees: precinct.supporting_attendees,
             total_attendees: precinct.total_attendees
           }
         )
@@ -115,7 +113,7 @@ describe Api::V1::PrecinctsController do
 
   describe '#update' do
     let!(:precinct) { Fabricate(:precinct, name: 'Des Moines 1', county: 'Polk') }
-    let(:params) { { name: 'Des Moines 2' } }
+    let(:params) { { name: 'Des Moines 2', delegate_counts: [{ key: 'sanders', supporters: 25 }] } }
 
     subject { patch :update, id: precinct.id, precinct: params }
 
@@ -132,7 +130,12 @@ describe Api::V1::PrecinctsController do
           expect(subject.body).to include_json(
             precinct: {
               name: 'Des Moines 2',
-              county: 'Polk'
+              county: 'Polk',
+              candidates: [{
+                key: 'sanders',
+                name: 'Bernie Sanders',
+                supporters: 25
+              }]
             }
           )
         end
