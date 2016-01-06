@@ -63,52 +63,11 @@ describe Api::V1::PrecinctsController do
     end
   end
 
-  describe '#create' do
-    let(:params) { { name: 'Des Moines 1', county: 'Polk' } }
+  describe '#begin' do
+    let!(:precinct) { Fabricate(:precinct, total_attendees: 0, total_delegates: 5) }
+    let(:params) { { total_attendees: 250 } }
 
-    subject { post :create, precinct: params }
-
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
-
-      context 'with valid params' do
-        it 'creates the precinct' do
-          expect(subject).to have_http_status(201)
-        end
-
-        it 'returns the precinct' do
-          expect(subject.body).to include_json(
-            precinct: {
-              name: 'Des Moines 1',
-              county: 'Polk'
-            }
-          )
-        end
-      end
-
-      context 'with invalid params' do
-        let(:params) { { name: 'Des Moines 1' } }
-
-        it 'returns unprocessable' do
-          expect(subject).to have_http_status(422)
-        end
-      end
-    end
-
-    context 'user is captain' do
-      before { login Fabricate(:captain) }
-
-      it 'returns unauthorized' do
-        expect(subject).to have_http_status(403)
-      end
-    end
-  end
-
-  describe '#update' do
-    let!(:precinct) { Fabricate(:precinct, name: 'Des Moines 1', county: 'Polk', total_attendees: 100, total_delegates: 5) }
-    let(:params) { { name: 'Des Moines 2', delegate_counts: [{ key: 'sanders', supporters: 75 }] } }
-
-    subject { patch :update, id: precinct.id, precinct: params }
+    subject { post :begin, precinct_id: precinct.id, precinct: params }
 
     context 'user is organizer' do
       before { login Fabricate(:organizer) }
@@ -116,20 +75,15 @@ describe Api::V1::PrecinctsController do
       context 'with valid params' do
         it 'updates the precinct' do
           expect(subject).to have_http_status(200)
-          expect(precinct.reload.name).to eq('Des Moines 2')
+          expect(precinct.reload.total_attendees).to eq(250)
         end
 
         it 'returns the precinct' do
           expect(subject.body).to include_json(
             precinct: {
-              name: 'Des Moines 2',
+              name: 'Des Moines 1',
               county: 'Polk',
-              delegate_counts: [{
-                key: 'sanders',
-                name: 'Bernie Sanders',
-                supporters: 75,
-                delegates_won: 4
-              }]
+              phase: 'viability'
             }
           )
         end
@@ -154,7 +108,7 @@ describe Api::V1::PrecinctsController do
 
         it 'updates the precinct' do
           expect(subject).to have_http_status(200)
-          expect(precinct.reload.name).to eq('Des Moines 2')
+          expect(precinct.reload.total_attendees).to eq(250)
         end
       end
 
@@ -166,20 +120,36 @@ describe Api::V1::PrecinctsController do
     end
   end
 
-  describe '#destroy' do
-    let!(:precinct) { Fabricate(:precinct) }
+  describe '#viability' do
+    let!(:precinct) { Fabricate(:viability_precinct, total_attendees: 250, total_delegates: 5) }
+    let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 75 }] } }
 
-    subject { delete :destroy, id: precinct.id }
+    subject { post :viability, precinct_id: precinct.id, precinct: params }
 
     context 'user is organizer' do
       before { login Fabricate(:organizer) }
 
-      it 'returns 204' do
-        expect(subject).to have_http_status(204)
-      end
+      context 'with valid params' do
+        it 'updates the precinct' do
+          expect(subject).to have_http_status(200)
+          expect(precinct.reload.delegate_counts[:sanders]).to eq(75)
+        end
 
-      it 'destroys the precinct' do
-        expect { subject }.to change { Precinct.count }.by(-1)
+        it 'returns the precinct' do
+          expect(subject.body).to include_json(
+            precinct: {
+              name: 'Des Moines 1',
+              county: 'Polk',
+              phase: 'apportionment',
+              is_viable: true,
+              delegate_counts: [{
+                key: 'sanders',
+                name: 'Bernie Sanders',
+                supporters: 75
+              }]
+            }
+          )
+        end
       end
     end
 
@@ -191,12 +161,65 @@ describe Api::V1::PrecinctsController do
       context 'user owns precinct' do
         before { precinct.users << captain }
 
-        it 'returns 204' do
-          expect(subject).to have_http_status(204)
+        it 'updates the precinct' do
+          expect(subject).to have_http_status(200)
+          expect(precinct.reload.delegate_counts[:sanders]).to eq(75)
+        end
+      end
+
+      context 'user does not own precinct' do
+        it 'returns unauthorized' do
+          expect(subject).to have_http_status(403)
+        end
+      end
+    end
+  end
+
+  describe '#apportionment' do
+    let!(:precinct) { Fabricate(:apportionment_precinct, total_attendees: 250, total_delegates: 5) }
+    let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 130 }] } }
+
+    subject { post :apportionment, precinct_id: precinct.id, precinct: params }
+
+    context 'user is organizer' do
+      before { login Fabricate(:organizer) }
+
+      context 'with valid params' do
+        it 'updates the precinct' do
+          expect(subject).to have_http_status(200)
+          expect(precinct.reload.delegate_counts[:sanders]).to eq(130)
         end
 
-        it 'destroys the precinct' do
-          expect { subject }.to change { Precinct.count }.by(-1)
+        it 'returns the precinct' do
+          expect(subject.body).to include_json(
+            precinct: {
+              name: 'Des Moines 1',
+              county: 'Polk',
+              phase: 'apportioned',
+              is_viable: true,
+              delegate_counts: [{
+                key: 'sanders',
+                name: 'Bernie Sanders',
+                supporters: 130,
+                delegates_won: 3
+              }]
+            }
+          )
+        end
+      end
+    end
+
+    context 'user is captain' do
+      let!(:captain) { Fabricate(:captain) }
+
+      before { login captain }
+
+      context 'user owns precinct' do
+        before { precinct.users << captain }
+
+        it 'updates the precinct' do
+          expect(subject).to have_http_status(200)
+          expect(precinct.reload.delegate_counts[:sanders]).to eq(130)
         end
       end
 

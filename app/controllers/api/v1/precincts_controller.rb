@@ -13,49 +13,63 @@ module Api
         render :show, locals: { precinct: current_precinct }
       end
 
-      def create
-        precinct = Precinct.new(precinct_params)
-        authorize! :create, precinct
-
-        if precinct.save
-          render :show, locals: { precinct: precinct }, status: :created, location: api_v1_precinct_url(precinct)
-        else
-          render json: precinct.errors, status: :unprocessable_entity
-        end
+      def begin
+        authorize! :update, current_precinct
+        current_precinct.begin!
+        current_precinct.update(total_attendees: params[:precinct][:total_attendees])
+        render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+      rescue CanCan::AccessDenied
+        raise
+      rescue => e
+        render json: { error: e.inspect }, status: :unprocessable_entity
       end
 
-      def update
+      def viability
         authorize! :update, current_precinct
 
-        if current_precinct.update(precinct_params)
-          # Update delegate counts
-          current_precinct.delegate_counts ||= {}
-          (params[:precinct][:delegate_counts] || []).each do |delegate|
-            next unless Candidate.keys.include? delegate['key']
-            current_precinct.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
-          end
-          current_precinct.save
-          render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
-        else
-          render json: current_precinct.errors, status: :unprocessable_entity
+        # Update delegate counts
+        current_precinct.delegate_counts ||= {}
+        (params[:precinct][:delegate_counts] || []).each do |delegate|
+          next unless Candidate.keys.include? delegate['key']
+          current_precinct.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
+
+        if current_precinct.above_threshold?
+          current_precinct.viable!
+        else
+          current_precinct.not_viable!
+        end
+
+        render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+      rescue CanCan::AccessDenied
+        raise
+      rescue => e
+        render json: { error: e.inspect }, status: :unprocessable_entity
       end
 
-      def destroy
-        authorize! :destroy, current_precinct
-        current_precinct.destroy
+      def apportionment
+        authorize! :update, current_precinct
 
-        head :no_content
+        # Update delegate counts
+        current_precinct.delegate_counts ||= {}
+        (params[:precinct][:delegate_counts] || []).each do |delegate|
+          next unless Candidate.keys.include? delegate['key']
+          current_precinct.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
+        end
+
+        current_precinct.apportion!
+
+        render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+      rescue CanCan::AccessDenied
+        raise
+      rescue => e
+        render json: { error: e.inspect }, status: :unprocessable_entity
       end
 
       private
 
       def current_precinct
-        @current_precinct ||= Precinct.find(params[:id])
-      end
-
-      def precinct_params
-        params.require(:precinct).permit(:name, :county, :total_attendees, :total_delegates)
+        @current_precinct ||= Precinct.find(params[:id] || params[:precinct_id])
       end
     end
   end

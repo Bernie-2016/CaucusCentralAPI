@@ -5,7 +5,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :precincts, except: [:new, :edit]
+      resources :precincts, only: [:index, :show] do
+        post :begin
+        post :viability
+        post :apportionment
+      end
       resources :sessions, only: [:create] do
         collection do
           delete :destroy
