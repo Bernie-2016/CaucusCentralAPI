@@ -8,7 +8,7 @@ describe Api::V1::InvitationsController do
   end
 
   describe '#create' do
-    let(:params) { { email: 'bernie@berniesanders.com' } }
+    let(:params) { { invitation: { email: 'bernie@berniesanders.com', privilege: 'captain' } } }
 
     subject { post :create, params }
 
@@ -23,14 +23,15 @@ describe Api::V1::InvitationsController do
         it 'returns the invitation' do
           expect(subject.body).to include_json(
             invitation: {
-              email: 'bernie@berniesanders.com'
+              email: 'bernie@berniesanders.com',
+              privilege: 'captain'
             }
           )
         end
       end
 
       context 'with invalid params' do
-        let(:params) { { email: 'not.an.email' } }
+        let(:params) { { invitation: { email: 'not.an.email' } } }
 
         it 'returns unprocessable' do
           expect(subject).to have_http_status(422)

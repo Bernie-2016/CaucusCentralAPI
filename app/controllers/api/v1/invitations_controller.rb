@@ -2,7 +2,7 @@ module Api
   module V1
     class InvitationsController < ApplicationController
       def create
-        invitation = Invitation.new(email: params[:email])
+        invitation = Invitation.new(invitation_params)
         authorize! :create, invitation
         invitation.sender = current_user
 
@@ -11,6 +11,13 @@ module Api
         else
           render json: invitation.errors, status: :unprocessable_entity
         end
+      end
+
+      private
+
+      def invitation_params
+        # No need to check privilege because only organizers can invite users
+        params.require(:invitation).permit(:email, :privilege)
       end
     end
   end

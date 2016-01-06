@@ -8,6 +8,8 @@ class Invitation < ActiveRecord::Base
 
   after_create :send_invite
 
+  enum privilege: [:unassigned, :captain, :organizer]
+
   private
 
   def recipient_not_registered
