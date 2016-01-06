@@ -63,7 +63,7 @@ module Api
       end
 
       def user_params
-        p = params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :privilege, :precinct_id)
+        p = params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :privilege, :invitation_token, :precinct_id)
         unless current_user.organizer?
           p.delete(:privilege)
           p.delete(:precinct_id)

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
           patch :profile, to: 'users#update_profile'
         end
       end
+      resources :invitations, only: [:create]
     end
   end
 end

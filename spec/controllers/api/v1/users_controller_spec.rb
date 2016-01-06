@@ -106,7 +106,8 @@ describe Api::V1::UsersController do
   end
 
   describe '#create' do
-    let(:params) { { first_name: 'Bernie', last_name: 'Sanders', email: 'bernie@berniesanders.com', password: 'password', password_confirmation: 'password', privilege: 'captain' } }
+    let!(:invitation) { Fabricate(:invitation) }
+    let(:params) { { first_name: 'Bernie', last_name: 'Sanders', email: 'bernie@berniesanders.com', password: 'password', password_confirmation: 'password', privilege: 'captain', invitation_token: invitation.token } }
 
     subject { post :create, user: params }
 
@@ -132,6 +133,14 @@ describe Api::V1::UsersController do
 
       context 'with invalid params' do
         let(:params) { { first_name: 'Bernie' } }
+
+        it 'returns unprocessable' do
+          expect(subject).to have_http_status(422)
+        end
+      end
+
+      context 'without an invitation token' do
+        let(:params) { { first_name: 'Bernie', last_name: 'Sanders', email: 'bernie@berniesanders.com', password: 'password', password_confirmation: 'password', privilege: 'captain' } }
 
         it 'returns unprocessable' do
           expect(subject).to have_http_status(422)
