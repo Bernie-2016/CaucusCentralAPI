@@ -3,7 +3,7 @@ class Invitation < ActiveRecord::Base
 
   validates :email, presence: true, format: /\A[^@]+@[^@]+\z/, allow_blank: false
   validate :recipient_not_registered
-  
+
   before_create :generate_token!
 
   after_create :send_invite
@@ -13,7 +13,7 @@ class Invitation < ActiveRecord::Base
   private
 
   def recipient_not_registered
-    self.errors[:email] << 'has already been invited' if User.exists?(email: email)
+    errors[:email] << 'has already been invited' if User.exists?(email: email)
   end
 
   def generate_token!
