@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   has_secure_password
 
-  has_and_belongs_to_many :precincts
+  belongs_to :precinct
   has_many :tokens, dependent: :destroy
   belongs_to :invitation
 

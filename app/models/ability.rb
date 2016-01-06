@@ -12,7 +12,7 @@ class Ability
       elsif user.unassigned?
         false
       else
-        user.precincts.include?(precinct)
+        user.precinct == precinct
       end
     end
 

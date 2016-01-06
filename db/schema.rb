@@ -28,15 +28,10 @@ ActiveRecord::Schema.define(version: 20160106030228) do
   create_table "precincts", force: :cascade do |t|
     t.string   "name"
     t.string   "county"
-    t.integer  "supporting_attendees"
     t.integer  "total_attendees"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-  end
-
-  create_table "precincts_users", id: :bigserial, force: :cascade do |t|
-    t.integer "precinct_id"
-    t.integer "user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.text     "delegate_counts"
   end
 
   create_table "tokens", id: :bigserial, force: :cascade do |t|
@@ -53,6 +48,9 @@ ActiveRecord::Schema.define(version: 20160106030228) do
     t.string  "password_digest"
     t.integer "privilege"
     t.integer "invitation_id"
+    t.integer "precinct_id"
   end
+
+  add_index "users", ["precinct_id"], name: "index_users_on_precinct_id", using: :btree
 
 end
