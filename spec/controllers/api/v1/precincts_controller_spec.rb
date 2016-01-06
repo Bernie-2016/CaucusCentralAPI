@@ -19,7 +19,6 @@ describe Api::V1::PrecinctsController do
             id: precincts.first.id,
             name: precincts.first.name,
             county: precincts.first.county,
-            total_attendees: precincts.first.total_attendees,
             total_delegates: precincts.first.total_delegates
           }]
         )
@@ -47,7 +46,6 @@ describe Api::V1::PrecinctsController do
             id: precinct.id,
             name: precinct.name,
             county: precinct.county,
-            total_attendees: precinct.total_attendees,
             total_delegates: precinct.total_delegates
           }
         )
@@ -86,14 +84,6 @@ describe Api::V1::PrecinctsController do
               phase: 'viability'
             }
           )
-        end
-      end
-
-      context 'with invalid params' do
-        let(:params) { {} }
-
-        it 'returns unprocessable' do
-          expect(subject).to have_http_status(422)
         end
       end
     end
