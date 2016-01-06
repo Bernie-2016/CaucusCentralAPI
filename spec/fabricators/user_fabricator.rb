@@ -5,6 +5,7 @@ Fabricator(:user) do
   password 'aquamansuxsomuch'
   password_confirmation 'aquamansuxsomuch'
   privilege :unassigned
+  invitation
 end
 
 Fabricator(:captain, from: :user) do
@@ -13,4 +14,5 @@ end
 
 Fabricator(:organizer, from: :user) do
   privilege :organizer
+  invitation nil
 end
