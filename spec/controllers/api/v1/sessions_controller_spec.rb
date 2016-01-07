@@ -16,10 +16,13 @@ describe Api::V1::SessionsController do
       it 'returns token, and user info' do
         expect(subject.body).to include_json(
           user: {
-            token: user.reload.tokens.first.token,
+            id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,
-            email: user.email
+            email: user.email,
+            privilege: user.privilege,
+            precinct_id: user.precinct_id,
+            token: user.reload.tokens.first.token
           }
         )
       end
