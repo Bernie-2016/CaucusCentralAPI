@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.2.3'
+ruby '2.3.0'
 
-gem 'rails', '4.2.4'
+gem 'rails', '4.2.5'
 
 gem 'aasm'
 gem 'bcrypt'
@@ -13,6 +13,9 @@ gem 'pg'
 gem 'rails-api'
 gem 'roadie-rails'
 gem 'simplecov', require: false
+
+# To fix this warning: warning: 2.2.x-compliant syntax, but you are running 2.3.0.
+gem 'parser', '2.3.0.pre.6' # WORK-AROUND for Ruby 2.2.4
 
 group :development do
   gem 'spring'
