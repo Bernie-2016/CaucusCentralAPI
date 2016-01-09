@@ -9,7 +9,7 @@ Caucus Central is an app to allow caucus precinct captains to quickly and easily
 ### Prerequisites
 
 * git
-* ruby 2.2.3 ([rvm](https://rvm.io/) recommended)
+* ruby 2.3.0 ([rvm](https://rvm.io/) recommended)
 * [postgres](http://www.postgresql.org/) (`brew install postgres` on OSX)
 
 ### Setup
