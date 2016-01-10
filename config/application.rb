@@ -23,6 +23,9 @@ module CaucusCentralAPI
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Set default headers to allow cross-origin requests
+    config.action_dispatch.default_headers.merge!('Access-Control-Allow-Origin' => '*')
+
     config.generators do |g|
       g.test_framework :rspec, fixture: true
       g.fixture_replacement :fabrication
