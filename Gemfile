@@ -10,6 +10,7 @@ gem 'figaro'
 gem 'foreigner'
 gem 'jbuilder'
 gem 'pg'
+gem 'rack-cors', require: 'rack/cors'
 gem 'rails-api'
 gem 'roadie-rails'
 gem 'simplecov', require: false
