@@ -128,6 +128,9 @@ GEM
       shellany (~> 0.0)
     parser (2.3.0.pre.6)
       ast (~> 2.2)
+    passenger (5.0.23)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.4)
     powerpack (0.1.1)
     pry (0.10.3)
@@ -167,6 +170,11 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails_12factor (0.0.3)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.4)
+    rails_stdout_logging (0.0.4)
     railties (4.2.5)
       actionpack (= 4.2.5)
       activesupport (= 4.2.5)
@@ -265,6 +273,7 @@ DEPENDENCIES
   guard-rspec
   jbuilder
   parser (= 2.3.0.pre.6)
+  passenger
   pg
   pry-nav
   pry-rails
@@ -272,6 +281,7 @@ DEPENDENCIES
   rack-cors
   rails (= 4.2.5)
   rails-api
+  rails_12factor
   roadie-rails
   rspec-json_expectations
   rspec-rails (~> 3.0)

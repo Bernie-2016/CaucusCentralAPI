@@ -36,3 +36,8 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'rubocop'
 end
+
+group :production do
+  gem 'passenger'
+  gem 'rails_12factor'
+end
