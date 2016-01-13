@@ -7,6 +7,7 @@ json.phase precinct.aasm_state
 
 unless precinct.start?
   json.total_attendees precinct.total_attendees
+  json.threshold precinct.threshold
 
   unless precinct.viability?
     json.is_viable precinct.aasm_state != 'not_viable'

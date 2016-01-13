@@ -42,8 +42,7 @@ class Precinct < ActiveRecord::Base
     (candidate_count(key).to_f * total_delegates.to_f / total_attendees.to_f).round.to_i
   end
 
-  def above_threshold?
-    bernie_supporters = delegate_counts[:sanders]
+  def threshold
     multiplier =
       if total_delegates <= 2
         0.25
@@ -52,7 +51,10 @@ class Precinct < ActiveRecord::Base
       else
         0.15
       end
-    threshold = (total_attendees.to_f * multiplier).ceil
-    bernie_supporters >= threshold
+    (total_attendees.to_f * multiplier).ceil
+  end
+
+  def above_threshold?
+    delegate_counts[:sanders] >= threshold
   end
 end
