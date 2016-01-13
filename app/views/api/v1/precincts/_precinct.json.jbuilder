@@ -1,6 +1,7 @@
 json.id precinct.id
 json.name precinct.name
 json.county precinct.county
+json.state precinct.state.try(:code)
 json.total_delegates precinct.total_delegates
 json.phase precinct.aasm_state
 

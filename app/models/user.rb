@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   has_many :tokens, dependent: :destroy
   belongs_to :invitation
 
-  default_scope -> { order(last_name: :asc) }
+  default_scope -> { order(last_name: :asc, first_name: :asc) }
 
   validates :email, :first_name, :last_name, presence: true, allow_blank: false
   validates :invitation, presence: true, uniqueness: { message: 'has already been redeemed' }, unless: :organizer?

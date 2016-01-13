@@ -3,6 +3,8 @@ class Precinct < ActiveRecord::Base
 
   validates :name, :county, presence: true
 
+  belongs_to :state
+
   has_many :users
 
   serialize :delegate_counts

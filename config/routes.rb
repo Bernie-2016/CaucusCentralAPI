@@ -15,6 +15,7 @@ Rails.application.routes.draw do
           delete :destroy
         end
       end
+      resources :states, only: [:index, :show]
       resources :users do
         collection do
           get :profile

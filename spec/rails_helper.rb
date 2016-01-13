@@ -24,4 +24,8 @@ RSpec.configure do |config|
   config.render_views = true
 
   config.include AuthHelper
+
+  config.before(:all) do
+    Rails.application.load_seed # loading seeds
+  end
 end
