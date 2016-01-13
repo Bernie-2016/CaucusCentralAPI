@@ -81,7 +81,7 @@ describe Api::V1::PrecinctsController do
             precinct: {
               name: 'Des Moines 1',
               county: 'Polk',
-              phase: 'Viability Phase'
+              phase: 'viability'
             }
           )
         end
@@ -130,7 +130,7 @@ describe Api::V1::PrecinctsController do
             precinct: {
               name: 'Des Moines 1',
               county: 'Polk',
-              phase: 'Apportionment Phase',
+              phase: 'apportionment',
               is_viable: true,
               delegate_counts: [{
                 key: 'sanders',
@@ -185,7 +185,7 @@ describe Api::V1::PrecinctsController do
             precinct: {
               name: 'Des Moines 1',
               county: 'Polk',
-              phase: 'Complete',
+              phase: 'apportioned',
               is_viable: true,
               delegate_counts: [{
                 key: 'sanders',

@@ -3,7 +3,7 @@ json.name precinct.name
 json.county precinct.county
 json.state precinct.state.try(:code)
 json.total_delegates precinct.total_delegates
-json.phase precinct.pretty_phase
+json.phase precinct.aasm_state
 
 unless precinct.start?
   json.total_attendees precinct.total_attendees
