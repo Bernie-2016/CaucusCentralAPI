@@ -33,6 +33,16 @@ class Precinct < ActiveRecord::Base
     end
   end
 
+  def pretty_phase
+    case aasm_state
+    when 'start' then 'Ready to Begin'
+    when 'viability' then 'Viability Phase'
+    when 'not_viable' then 'Not Viable'
+    when 'apportionment' then 'Apportionment Phase'
+    when 'apportioned' then 'Complete'
+    end
+  end
+
   def candidate_count(key)
     (delegate_counts || {})[key.intern] || 0
   end
