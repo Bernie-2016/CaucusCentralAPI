@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       resources :states, only: [:index, :show]
       resources :users do
         collection do
+          post :import
           get :profile
           patch :profile, to: 'users#update_profile'
         end

@@ -147,6 +147,87 @@ describe Api::V1::UsersController do
     end
   end
 
+  describe '#import' do
+    let(:params) { [] }
+    subject { post :import, users: params }
+
+    context 'user is organizer' do
+      let!(:precinct) { Fabricate(:precinct, state: State.find_by(code: 'IA')) }
+
+      before { login Fabricate(:organizer) }
+
+      context 'with valid params' do
+        let(:params) { [{ code: 'IA', county: precinct.county, precinct: precinct.name, email: 'joe@vol.com' }] }
+
+        it 'returns 201' do
+          expect(subject).to have_http_status(201)
+        end
+
+        it 'imports the user' do
+          expect { subject }.to change { Invitation.count }.by(1)
+        end
+
+        it 'returns the success count' do
+          expect(subject.body).to include_json(importedCount: 1)
+        end
+      end
+
+      context 'when user already exists' do
+        let!(:existing_user) { Fabricate(:user, email: 'joe@vol.com') }
+        let(:params) { [{ code: 'IA', county: precinct.county, precinct: precinct.name, email: 'joe@vol.com' }] }
+
+        it 'does not import the user' do
+          expect { subject }.to change { Invitation.count }.by(0)
+        end
+
+        it 'returns the success count and error reason' do
+          expect(subject.body).to include_json(importedCount: 0,
+                                               failedUsers: [{
+                                                 reason: 'User already exists'
+                                               }])
+        end
+      end
+
+      context 'when state does not exist' do
+        let(:params) { [{ code: 'XX', county: precinct.county, precinct: precinct.name, email: 'joe@vol.com' }] }
+
+        it 'does not import the user' do
+          expect { subject }.to change { Invitation.count }.by(0)
+        end
+
+        it 'returns the success count and error reason' do
+          expect(subject.body).to include_json(importedCount: 0,
+                                               failedUsers: [{
+                                                 reason: 'State does not exist'
+                                               }])
+        end
+      end
+
+      context 'when precinct does not exist' do
+        let(:params) { [{ code: 'IA', county: 'Nowheresville', precinct: precinct.name, email: 'joe@vol.com' }] }
+
+        it 'does not import the user' do
+          expect { subject }.to change { Invitation.count }.by(0)
+        end
+
+        it 'returns the success count and error reason' do
+          expect(subject.body).to include_json(importedCount: 0,
+                                               failedUsers: [{
+                                                 reason: 'Precinct does not exist'
+                                               }])
+        end
+      end
+    end
+
+    context 'user is captain' do
+      before { login Fabricate(:captain) }
+
+      it 'returns unauthorized' do
+        expect(subject).to have_http_status(403)
+      end
+    end
+  end
+
   describe '#update' do
     let!(:user) { Fabricate(:user, first_name: 'Bernie') }
     let(:params) { { first_name: 'Bernard' } }

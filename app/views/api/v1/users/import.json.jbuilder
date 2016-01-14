@@ -1,0 +1,2 @@
+json.importedCount success_count
+json.failedUsers failed_users

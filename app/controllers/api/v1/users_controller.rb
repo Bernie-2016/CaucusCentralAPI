@@ -30,6 +30,34 @@ module Api
         end
       end
 
+      def import
+        authorize! :create, User.new
+
+        success_count = 0
+        failed_users = []
+
+        params[:users].each do |user|
+          if User.exists?(email: user[:email])
+            failed_users << { user: user, reason: 'User already exists' }
+          else
+            state = State.find_by(code: user[:code])
+            if state
+              precinct = state.precincts.find_by(county: user[:county], name: user[:precinct])
+              if precinct
+                Invitation.create(sender: current_user, email: user[:email], privilege: :captain, precinct: precinct)
+                success_count += 1
+              else
+                failed_users << { user: user, reason: 'Precinct does not exist' }
+              end
+            else
+              failed_users << { user: user, reason: 'State does not exist' }
+            end
+          end
+        end
+
+        render :import, locals: { success_count: success_count, failed_users: failed_users }, status: :created
+      end
+
       def update
         authorize! :update, current_param_user
 
