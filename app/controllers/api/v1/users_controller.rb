@@ -2,6 +2,8 @@ module Api
   module V1
     class UsersController < ApplicationController
       skip_authorization_check only: [:index, :create]
+      skip_before_action :authenticate!, only: [:create]
+      before_action :authenticate_create!, only: [:create]
 
       def index
         render_unauthenticated! unless current_user.organizer?
@@ -20,7 +22,6 @@ module Api
 
       def create
         user = User.new(user_params)
-        authorize! :create, user
 
         if user.save
           render :show, locals: { user: user }, status: :created, location: api_v1_user_url(user)
@@ -64,11 +65,16 @@ module Api
 
       def user_params
         p = params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :privilege, :invitation_token, :precinct_id)
-        unless current_user.organizer?
+        unless current_user && current_user.organizer?
           p.delete(:privilege)
           p.delete(:precinct_id)
         end
         p
+      end
+
+      def authenticate_create!
+        invitation = Invitation.find_by(token: request.headers['Authorization'])
+        render_unauthenticated! unless invitation && invitation.unexpired?
       end
     end
   end

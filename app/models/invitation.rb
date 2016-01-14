@@ -13,6 +13,10 @@ class Invitation < ActiveRecord::Base
 
   enum privilege: [:unassigned, :captain, :organizer]
 
+  def unexpired?
+    created_at > Date.today - 7.days
+  end
+
   private
 
   def recipient_not_registered
