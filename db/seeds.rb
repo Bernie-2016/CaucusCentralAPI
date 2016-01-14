@@ -18,10 +18,12 @@ states.each do |state|
   State.create(name: state[:name], code: state[:code], caucus_date: state[:caucus_date]) unless State.exists?(name: state[:name], code: state[:code])
 end
 
-Dir.glob(Rails.root.join('db', 'data', '*.csv')).each do |file|
-  File.open(file).each do |line|
-    line = line.split(',')
-    state = State.find_by_code(line[0])
-    state.precincts.create(county: line[1], name: line[2], total_delegates: line[3].to_i) unless state.precincts.exists?(county: line[1], name: line[2])
+unless Rails.env.test?
+  Dir.glob(Rails.root.join('db', 'data', '*.csv')).each do |file|
+    File.open(file).each do |line|
+      line = line.split(',')
+      state = State.find_by_code(line[0])
+      state.precincts.create(county: line[1], name: line[2], total_delegates: line[3].to_i) unless state.precincts.exists?(county: line[1], name: line[2])
+    end
   end
 end
