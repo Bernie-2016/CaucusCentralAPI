@@ -1,11 +1,31 @@
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
-  context 'when creating a new user' do
-    subject(:user) {Fabricate(:confirmed_user) }
+describe User do
+  context 'when creating a new captain' do
+    describe 'with an invitation token' do
+      let!(:invitation) { Fabricate(:invitation, privilege: :organizer) }
+      subject(:user) { Fabricate(:captain, invitation_token: invitation.token, invitation: nil) }
 
-    it 'should have an auth token' do
-      expect(user.auth_token).to_not be_blank
+      it 'assigns the invitation by its token' do
+        expect(user.invitation).to eq invitation
+      end
+
+      it 'assigns the privilege of its invitation' do
+        expect(user.privilege).to eq invitation.privilege
+      end
+
+      it 'assigns the precinct_id of its invitation' do
+        expect(user.precinct_id).to eq invitation.precinct_id
+      end
+    end
+
+    context 'without an invitation token' do
+      subject(:user) { Fabricate.build(:captain, invitation_token: nil, invitation: nil) }
+
+      it 'should not save' do
+        subject.save
+        expect(subject.errors[:invitation].length).to be >= 1
+      end
     end
   end
 end

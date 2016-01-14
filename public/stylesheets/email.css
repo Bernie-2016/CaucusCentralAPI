@@ -1,0 +1,37 @@
+body {
+  font-family: 'Arial';
+}
+
+h2 {
+  color: #147FD7;
+}
+
+div.header {
+  text-align: center;
+}
+
+div.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top:1px solid #AAA;
+}
+
+div.footer p.paid-for {
+  display: inline-block;
+  border: 1px solid #555;
+  padding: 5px 10px;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+div.footer p.billionaires {
+  font-size: 11px;
+  margin: 5px 0 0;
+}
+
+div.footer p.address {
+  font-size: 9px;
+  margin: 15px 0 15px;
+  color: #444;
+}

@@ -1,0 +1,22 @@
+AllCops:
+  Exclude:
+    - bin/**
+    - db/**/*
+    - vendor/**/*
+
+AbcSize:
+  Enabled: false
+CyclomaticComplexity:
+  Enabled: false
+Documentation:
+  Enabled: false
+ClassLength:
+  Enabled: false
+LineLength:
+  Enabled: false
+MethodLength:
+  Enabled: false
+ParameterLists:
+  Enabled: false
+PerceivedComplexity:
+  Enabled: false

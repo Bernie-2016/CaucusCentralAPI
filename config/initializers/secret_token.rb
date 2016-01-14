@@ -10,10 +10,10 @@
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
 
-# Although this is not needed for an api-only application, rails4 
-# requires secret_key_base or secret_token to be defined, otherwise an 
+# Although this is not needed for an api-only application, rails4
+# requires secret_key_base or secret_token to be defined, otherwise an
 # error is raised.
 # Using secret_token for rails3 compatibility. Change to secret_key_base
 # to avoid deprecation warning.
 # Can be safely removed in a rails3 api-only application.
-CaucusCentralAPI::Application.config.secret_token = '898d0443f002862a9175fd73cef8a463849eb2f263d2c9ef46d2b4e8aeb80adb8275f72ed2f690e3c65fc859c22f4f2bcab7e07ae4a8137d45d3bfe42978ad0c'
+CaucusCentralAPI::Application.config.secret_token = ENV.fetch('SECRET_TOKEN')
