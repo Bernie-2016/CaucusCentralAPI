@@ -111,46 +111,36 @@ describe Api::V1::UsersController do
 
     subject { post :create, user: params }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'with valid params' do
+      before { request.headers['Authorization'] = invitation.token }
 
-      context 'with valid params' do
-        it 'creates the user' do
-          expect(subject).to have_http_status(201)
-        end
-
-        it 'returns the user' do
-          expect(subject.body).to include_json(
-            user: {
-              first_name: 'Bernie',
-              last_name: 'Sanders',
-              email: 'bernie@berniesanders.com',
-              privilege: 'captain'
-            }
-          )
-        end
+      it 'creates the user' do
+        expect(subject).to have_http_status(201)
       end
 
-      context 'with invalid params' do
-        let(:params) { { first_name: 'Bernie' } }
-
-        it 'returns unprocessable' do
-          expect(subject).to have_http_status(422)
-        end
-      end
-
-      context 'without an invitation token' do
-        let(:params) { { first_name: 'Bernie', last_name: 'Sanders', email: 'bernie@berniesanders.com', password: 'password', password_confirmation: 'password', privilege: 'captain' } }
-
-        it 'returns unprocessable' do
-          expect(subject).to have_http_status(422)
-        end
+      it 'returns the user' do
+        expect(subject.body).to include_json(
+          user: {
+            first_name: 'Bernie',
+            last_name: 'Sanders',
+            email: 'bernie@berniesanders.com',
+            privilege: 'captain'
+          }
+        )
       end
     end
 
-    context 'user is captain' do
-      before { login Fabricate(:captain) }
+    context 'with invalid params' do
+      before { request.headers['Authorization'] = invitation.token }
 
+      let(:params) { { first_name: 'Bernie' } }
+
+      it 'returns unprocessable' do
+        expect(subject).to have_http_status(422)
+      end
+    end
+
+    context 'without an invitation token' do
       it 'returns unauthorized' do
         expect(subject).to have_http_status(403)
       end
