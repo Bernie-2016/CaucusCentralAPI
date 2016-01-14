@@ -36,7 +36,7 @@ module CaucusCentralAPI
     config.middleware.insert_before 0, 'Rack::Cors' do
       allow do
         origins '*'
-        resource '*', headers: :any, methods: [:get, :path, :post, :delete, :options]
+        resource '*', headers: :any, methods: [:get, :patch, :post, :delete, :options]
       end
     end
   end
