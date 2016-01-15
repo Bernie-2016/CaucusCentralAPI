@@ -7,6 +7,8 @@ class Precinct < ActiveRecord::Base
 
   has_many :users
 
+  default_scope -> { order(name: :asc) }
+
   serialize :delegate_counts
 
   aasm do

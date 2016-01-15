@@ -303,7 +303,7 @@ describe Api::V1::UsersController do
     subject { post :reset_password, user: params }
 
     context 'user has expired token' do
-      before { request.headers['Authorization'] = Fabricate(:token, created_at: Date.today - 10.days, token_type: :session, user: user).token }
+      before { request.headers['Authorization'] = Fabricate(:token, created_at: Date.today - 10.days, token_type: :reset, user: user).token }
 
       it 'returns unauthorized' do
         expect(subject).to have_http_status(403)
@@ -311,7 +311,7 @@ describe Api::V1::UsersController do
     end
 
     context 'user has valid token' do
-      before { request.headers['Authorization'] = Fabricate(:token, token_type: :session, user: user).token }
+      before { request.headers['Authorization'] = Fabricate(:token, token_type: :reset, user: user).token }
 
       context 'with valid params' do
         let(:params) { { password: 'new_password', password_confirmation: 'new_password' } }
