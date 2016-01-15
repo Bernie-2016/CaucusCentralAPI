@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   end
 
   def send_reset!
-    token = tokens.reset.create
+    token = tokens.create(token_type: :reset)
     ApplicationMailer.reset(id, token.token).deliver_now
   end
 end

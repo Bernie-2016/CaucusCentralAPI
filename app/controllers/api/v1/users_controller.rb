@@ -121,7 +121,7 @@ module Api
       end
 
       def authenticate_reset_password!
-        token = Token.session.find_by(token: request.headers['Authorization'])
+        token = Token.reset.find_by(token: request.headers['Authorization'])
         render_unauthenticated! unless token && token.unexpired?
       end
     end
