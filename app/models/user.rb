@@ -22,4 +22,9 @@ class User < ActiveRecord::Base
     self.privilege = invitation.privilege
     self.precinct_id = invitation.precinct_id
   end
+
+  def send_reset!
+    token = tokens.reset.create
+    ApplicationMailer.reset(id, token.token).deliver_now
+  end
 end

@@ -296,6 +296,46 @@ describe Api::V1::UsersController do
     end
   end
 
+  describe '#reset_password' do
+    let(:params) { {} }
+    let!(:user) { Fabricate(:user, email: 'joe@smith.com') }
+
+    subject { post :reset_password, user: params }
+
+    context 'user has expired token' do
+      before { request.headers['Authorization'] = Fabricate(:token, created_at: Date.today - 10.days, token_type: :session, user: user).token }
+
+      it 'returns unauthorized' do
+        expect(subject).to have_http_status(403)
+      end
+    end
+
+    context 'user has valid token' do
+      before { request.headers['Authorization'] = Fabricate(:token, token_type: :session, user: user).token }
+
+      context 'with valid params' do
+        let(:params) { { password: 'new_password', password_confirmation: 'new_password' } }
+
+        it 'returns ok' do
+          expect(subject).to have_http_status(200)
+        end
+
+        it 'updates the password' do
+          subject
+          expect(user.reload.authenticate('new_password')).to be_truthy
+        end
+      end
+
+      context 'with invalid params' do
+        let(:params) { { password: 'new_password', password_confirmation: 'wrong' } }
+
+        it 'returns unprocessable' do
+          expect(subject).to have_http_status(422)
+        end
+      end
+    end
+  end
+
   describe '#destroy' do
     let!(:user) { Fabricate(:user) }
 

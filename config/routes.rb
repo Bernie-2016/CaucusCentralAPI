@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       end
       resources :sessions, only: [:create] do
         collection do
+          post :reset_password
           delete :destroy
         end
       end
@@ -21,6 +22,7 @@ Rails.application.routes.draw do
           post :import
           get :profile
           patch :profile, to: 'users#update_profile'
+          post :reset_password
         end
       end
       resources :invitations, only: [:create]

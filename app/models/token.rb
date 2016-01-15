@@ -5,6 +5,8 @@ class Token < ActiveRecord::Base
 
   default_scope -> { order(created_at: :desc) }
 
+  enum token_type: [:session, :reset]
+
   def unexpired?
     created_at > Date.today - 7.days
   end

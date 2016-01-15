@@ -69,4 +69,37 @@ describe Api::V1::SessionsController do
       end
     end
   end
+
+  describe '#reset_password' do
+    let(:email) { 'joe@smith.com' }
+
+    subject { post :reset_password, email: email }
+
+    context 'email exists' do
+      let!(:user) { Fabricate(:user, email: 'joe@smith.com') }
+
+      it 'returns 204' do
+        expect(subject).to have_http_status(204)
+      end
+
+      it 'sends mail' do
+        expect { subject }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
+
+      it 'includes token in mail' do
+        subject
+        expect(ActionMailer::Base.deliveries.last.body.encoded).to match(user.tokens.reset.last.token)
+      end
+    end
+
+    context 'email does not exist' do
+      it 'returns 204' do
+        expect(subject).to have_http_status(204)
+      end
+
+      it 'does not send mail' do
+        expect { subject }.to change { ActionMailer::Base.deliveries.count }.by(0)
+      end
+    end
+  end
 end

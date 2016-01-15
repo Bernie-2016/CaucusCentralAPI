@@ -33,7 +33,7 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate!
-    token = Token.find_by(token: request.headers['Authorization'])
+    token = Token.session.find_by(token: request.headers['Authorization'])
     render_unauthenticated! unless token && token.unexpired?
   end
 

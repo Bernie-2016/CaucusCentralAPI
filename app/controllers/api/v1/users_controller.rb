@@ -2,8 +2,9 @@ module Api
   module V1
     class UsersController < ApplicationController
       skip_authorization_check only: [:index, :create]
-      skip_before_action :authenticate!, only: [:create]
+      skip_before_action :authenticate!, only: [:create, :reset_password]
       before_action :authenticate_create!, only: [:create]
+      before_action :authenticate_reset_password!, only: [:reset_password]
 
       def index
         render_unauthenticated! unless current_user.organizer?
@@ -78,6 +79,16 @@ module Api
         end
       end
 
+      def reset_password
+        authorize! :update, current_user
+
+        if current_user.update(reset_params)
+          render :show, locals: { user: current_user }, status: :ok, location: api_v1_user_url(current_user)
+        else
+          render json: current_user.errors, status: :unprocessable_entity
+        end
+      end
+
       def destroy
         authorize! :destroy, current_param_user
         current_param_user.destroy
@@ -100,9 +111,18 @@ module Api
         p
       end
 
+      def reset_params
+        params.require(:user).permit(:password, :password_confirmation)
+      end
+
       def authenticate_create!
         invitation = Invitation.find_by(token: request.headers['Authorization'])
         render_unauthenticated! unless invitation && invitation.unexpired?
+      end
+
+      def authenticate_reset_password!
+        token = Token.session.find_by(token: request.headers['Authorization'])
+        render_unauthenticated! unless token && token.unexpired?
       end
     end
   end
