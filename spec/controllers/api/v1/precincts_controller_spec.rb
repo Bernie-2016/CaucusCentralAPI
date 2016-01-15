@@ -220,4 +220,70 @@ describe Api::V1::PrecinctsController do
       end
     end
   end
+
+  describe '#update' do
+    let!(:precinct) { Fabricate(:apportionment_precinct, total_attendees: 250, total_delegates: 5) }
+    let(:params) { {} }
+
+    subject { patch :update, id: precinct.id, precinct: params }
+
+    context 'user is organizer' do
+      before { login Fabricate(:organizer) }
+
+      context 'with valid params' do
+        context 'reverting to viability' do
+          let(:params) { { phase: 'viability', total_attendees: 125 } }
+
+          it 'updates the precinct' do
+            expect(subject).to have_http_status(200)
+            expect(precinct.reload.total_attendees).to eq(125)
+          end
+
+          it 'returns the precinct' do
+            expect(subject.body).to include_json(
+              precinct: {
+                name: 'Des Moines 1',
+                county: 'Polk',
+                phase: 'viability',
+                total_attendees: 125
+              }
+            )
+          end
+        end
+
+        context 'setting delegate counts' do
+          let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 130 }] } }
+
+          it 'updates the precinct' do
+            expect(subject).to have_http_status(200)
+            expect(precinct.reload.delegate_counts[:sanders]).to eq(130)
+          end
+
+          it 'returns the precinct' do
+            expect(subject.body).to include_json(
+              precinct: {
+                name: 'Des Moines 1',
+                county: 'Polk',
+                phase: 'apportionment',
+                is_viable: true,
+                delegate_counts: [{
+                  key: 'sanders',
+                  name: 'Bernie Sanders',
+                  supporters: 130
+                }]
+              }
+            )
+          end
+        end
+      end
+    end
+
+    context 'user is captain' do
+      before { login Fabricate(:captain) }
+
+      it 'returns unauthorized' do
+        expect(subject).to have_http_status(403)
+      end
+    end
+  end
 end

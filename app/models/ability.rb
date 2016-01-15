@@ -15,6 +15,7 @@ class Ability
         user.precinct == precinct
       end
     end
+    can :admin, Precinct if user.organizer?
 
     can :create, Token
     can :destroy, Token do |token|

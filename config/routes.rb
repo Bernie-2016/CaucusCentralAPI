@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :precincts, only: [:index, :show] do
+      resources :precincts, only: [:index, :show, :update] do
         post :begin
         post :viability
         post :apportionment
