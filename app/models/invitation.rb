@@ -19,7 +19,7 @@ class Invitation < ActiveRecord::Base
   private
 
   def recipient_not_registered
-    errors[:email] << 'has already been invited' if User.exists?(email: email)
+    errors[:email] << 'has already been invited' if User.exists?(email: email) || Invitation.exists?(email: email)
   end
 
   def generate_token!

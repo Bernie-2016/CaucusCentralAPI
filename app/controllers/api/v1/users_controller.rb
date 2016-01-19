@@ -38,7 +38,7 @@ module Api
         failed_users = []
 
         params[:users].each do |user|
-          if User.exists?(email: user[:email])
+          if User.exists?(email: user[:email]) || Invitation.exists?(email: user[:email])
             failed_users << { user: user, reason: 'User already exists' }
           else
             state = State.find_by(code: user[:code])
