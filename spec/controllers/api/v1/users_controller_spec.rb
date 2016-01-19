@@ -21,11 +21,11 @@ describe Api::V1::UsersController do
       it 'returns details for each user' do
         expect(subject.body).to include_json(
           users: [{
-            id: users.first.id,
-            first_name: users.first.first_name,
-            last_name: users.first.last_name,
-            email: users.first.email,
-            privilege: users.first.privilege
+            id: User.first.id,
+            first_name: User.first.first_name,
+            last_name: User.first.last_name,
+            email: User.first.email,
+            privilege: User.first.privilege
           }]
         )
       end
@@ -106,8 +106,8 @@ describe Api::V1::UsersController do
   end
 
   describe '#create' do
-    let!(:invitation) { Fabricate(:invitation) }
-    let(:params) { { first_name: 'Bernie', last_name: 'Sanders', email: 'bernie@berniesanders.com', password: 'password', password_confirmation: 'password', privilege: 'captain', invitation_token: invitation.token } }
+    let!(:invitation) { Fabricate(:invitation, privilege: :organizer) }
+    let(:params) { { first_name: 'Bernie', last_name: 'Sanders', email: 'bernie@berniesanders.com', password: 'password', password_confirmation: 'password', invitation_token: invitation.token } }
 
     subject { post :create, user: params }
 
@@ -124,7 +124,7 @@ describe Api::V1::UsersController do
             first_name: 'Bernie',
             last_name: 'Sanders',
             email: 'bernie@berniesanders.com',
-            privilege: 'captain'
+            privilege: 'organizer'
           }
         )
       end
@@ -143,6 +143,16 @@ describe Api::V1::UsersController do
     context 'without an invitation token' do
       it 'returns unauthorized' do
         expect(subject).to have_http_status(403)
+      end
+    end
+
+    context 'with previously redeemed token' do
+      let!(:previous_user) { Fabricate(:user, invitation: invitation) }
+
+      before { request.headers['Authorization'] = invitation.token }
+
+      it 'returns unprocessable' do
+        expect(subject).to have_http_status(422)
       end
     end
   end

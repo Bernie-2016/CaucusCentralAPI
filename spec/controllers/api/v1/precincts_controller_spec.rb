@@ -10,7 +10,7 @@ describe Api::V1::PrecinctsController do
       before { login Fabricate(:organizer) }
 
       it 'returns all precincts' do
-        expect(JSON.parse(subject.body)['precincts'].length).to eq(10)
+        expect(JSON.parse(subject.body)['precincts'].length).to eq(11)
       end
 
       it 'returns details for each precinct' do

@@ -14,5 +14,4 @@ end
 
 Fabricator(:organizer, from: :user) do
   privilege :organizer
-  invitation nil
 end

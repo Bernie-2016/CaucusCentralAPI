@@ -37,7 +37,7 @@ describe Api::V1::InvitationsController do
 
         it 'includes token in mail' do
           subject
-          expect(ActionMailer::Base.deliveries.last.body.encoded).to match(Invitation.last.token)
+          expect(ActionMailer::Base.deliveries.last.body.encoded).to match(Invitation.find_by(email: 'bernie@berniesanders.com').token)
         end
       end
 
