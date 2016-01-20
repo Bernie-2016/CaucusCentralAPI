@@ -4,6 +4,9 @@ json.county precinct.county
 json.state precinct.state.try(:code)
 json.total_delegates precinct.total_delegates
 json.phase precinct.aasm_state
+json.captain_id precinct.captain.try(:id)
+json.captain_last_name precinct.captain.try(:last_name)
+json.captain_first_name precinct.captain.try(:first_name)
 
 unless precinct.start?
   json.total_attendees precinct.total_attendees

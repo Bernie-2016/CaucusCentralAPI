@@ -70,4 +70,8 @@ class Precinct < ActiveRecord::Base
     else 'Invalid precinct state'
     end
   end
+
+  def captain
+    User.where(precinct_id: id).first
+  end
 end
