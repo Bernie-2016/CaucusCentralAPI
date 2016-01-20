@@ -1,3 +1,3 @@
 json.states do
-  json.array! states, partial: 'state', as: :state
+  json.array! states, :name, :code, :caucus_date
 end
