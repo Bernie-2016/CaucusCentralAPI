@@ -62,11 +62,11 @@ class Precinct < ActiveRecord::Base
 
   def phase_pretty
     case aasm_state
-    when :start then 'Ready to Begin'
-    when :viability then 'Viability Phase'
-    when :not_viable then 'Not Viable'
-    when :apportionment then 'Apportionment Phase'
-    when :apportioned then 'Caucus Completed'
+    when 'start' then 'Ready to Begin'
+    when 'viability' then 'Viability Phase'
+    when 'not_viable' then 'Not Viable'
+    when 'apportionment' then 'Apportionment Phase'
+    when 'apportioned' then 'Caucus Completed'
     else 'Invalid precinct state'
     end
   end
