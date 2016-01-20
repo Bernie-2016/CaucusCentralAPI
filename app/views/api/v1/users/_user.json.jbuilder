@@ -4,4 +4,5 @@ json.last_name user.last_name
 json.email user.email
 json.precinct_id user.precinct_id
 json.precinct_name user.precinct.try(:name)
+json.precinct_state user.precinct.try(:state).try(:code)
 json.privilege user.privilege
