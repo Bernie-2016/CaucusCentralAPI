@@ -61,11 +61,12 @@ describe Api::V1::StatesController do
 
   describe '#csv' do
     let(:state) { State.find_by_code('IA') }
+    let(:token) { nil }
 
-    subject { get :csv, state_id: 'IA' }
+    subject { get :csv, state_id: 'IA', token: token }
 
     context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+      let!(:token) { Fabricate(:token, user: Fabricate(:organizer)).token }
 
       it 'returns CSV for state results' do
         csv_rows = subject.body.split("\n")
@@ -77,7 +78,7 @@ describe Api::V1::StatesController do
     end
 
     context 'user is captain' do
-      before { login Fabricate(:captain) }
+      let!(:token) { Fabricate(:token, user: Fabricate(:captain)).token }
 
       it 'returns unauthorized' do
         expect(subject).to have_http_status(403)

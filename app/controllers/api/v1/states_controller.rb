@@ -1,7 +1,9 @@
 module Api
   module V1
     class StatesController < ApplicationController
-      skip_authorization_check only: [:index]
+      skip_authorization_check only: [:index, :csv]
+      skip_before_action :authenticate!, only: [:csv]
+      before_action :authenticate_csv!, only: [:csv]
 
       def index
         render_unauthenticated! unless current_user.organizer?
@@ -14,7 +16,6 @@ module Api
       end
 
       def csv
-        authorize! :read, current_state
         send_data to_csv(current_state.precincts), filename: "#{current_state.name.downcase}.csv"
       end
 
@@ -22,6 +23,11 @@ module Api
 
       def current_state
         @current_state ||= State.find_by_code(params[:id] || params[:state_id])
+      end
+
+      def authenticate_csv!
+        token = Token.session.find_by(token: params[:token])
+        render_unauthenticated! unless token && token.unexpired? && token.user.organizer?
       end
 
       def to_csv(precincts)
