@@ -127,6 +127,8 @@ GEM
     notiffany (0.0.8)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    oj (2.14.3)
+    oj_mimic_json (1.0.1)
     parser (2.3.0.pre.6)
       ast (~> 2.2)
     passenger (5.0.23)
@@ -274,6 +276,8 @@ DEPENDENCIES
   guard-brakeman
   guard-rspec
   jbuilder
+  oj
+  oj_mimic_json
   parser (= 2.3.0.pre.6)
   passenger
   pg
