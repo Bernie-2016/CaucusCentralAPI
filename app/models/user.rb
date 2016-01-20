@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   default_scope -> { order(last_name: :asc, first_name: :asc) }
 
   validates :email, :first_name, :last_name, presence: true, allow_blank: false
-  validates :invitation, presence: true, uniqueness: { message: 'has already been redeemed' }
+  validates :invitation, presence: true, uniqueness: { message: 'has already been redeemed' }, on: :create
 
   enum privilege: [:unassigned, :captain, :organizer]
 
