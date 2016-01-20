@@ -16,7 +16,9 @@ Rails.application.routes.draw do
           delete :destroy
         end
       end
-      resources :states, only: [:index, :show]
+      resources :states, only: [:index, :show] do
+        get :csv
+      end
       resources :users do
         collection do
           post :import

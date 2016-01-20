@@ -58,4 +58,30 @@ describe Api::V1::StatesController do
       end
     end
   end
+
+  describe '#csv' do
+    let(:state) { State.find_by_code('IA') }
+
+    subject { get :csv, state_id: 'IA' }
+
+    context 'user is organizer' do
+      before { login Fabricate(:organizer) }
+
+      it 'returns CSV for state results' do
+        csv_rows = subject.body.split("\n")
+        expect(csv_rows[0]).to eq('county,precinct,phase,total_attendees,sanders,clinton,omalley,total_delegates,delegates_awarded')
+        p = state.precincts.first
+        first_row = "#{p.county},#{p.name},#{p.phase_pretty},#{p.total_attendees},#{p.candidate_count('sanders')},#{p.candidate_count('clinton')},#{p.candidate_count('omalley')},#{p.total_delegates},#{p.candidate_delegates('sanders')}"
+        expect(csv_rows[1]).to eq(first_row)
+      end
+    end
+
+    context 'user is captain' do
+      before { login Fabricate(:captain) }
+
+      it 'returns unauthorized' do
+        expect(subject).to have_http_status(403)
+      end
+    end
+  end
 end
