@@ -107,6 +107,8 @@ GEM
     jbuilder (2.4.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
+    jbuilder_cache_multi (0.0.3)
+      jbuilder (>= 1.5.0, < 3)
     json (1.8.3)
     listen (3.0.5)
       rb-fsevent (>= 0.9.3)
@@ -276,6 +278,7 @@ DEPENDENCIES
   guard-brakeman
   guard-rspec
   jbuilder
+  jbuilder_cache_multi
   oj
   oj_mimic_json
   parser (= 2.3.0.pre.6)

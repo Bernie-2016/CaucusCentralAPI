@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include ActionController::Caching
   include CanCan::ControllerAdditions
 
   around_action :catch_halt
