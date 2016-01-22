@@ -14,9 +14,9 @@ class ReportSerializer < JsonSerializer
             key_node[:key] = key
             key_node[:name] = Candidate.name(key)
             key_node[:supporters] = report.candidate_count(key)
+            key_node[:delegates_won] = report.candidate_delegates(key) if report.apportioned?
             key_node
           end
-          node[:delegates_won] = report.candidate_delegates(:sanders) if report.apportioned?
         end
       end
 

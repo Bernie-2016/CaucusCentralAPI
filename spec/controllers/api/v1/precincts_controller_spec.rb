@@ -204,9 +204,9 @@ describe Api::V1::PrecinctsController do
                 delegate_counts: [{
                   key: 'sanders',
                   name: 'Bernie Sanders',
-                  supporters: 130
-                }],
-                delegates_won: 3
+                  supporters: 130,
+                  delegates_won: 3
+                }]
               }]
             }
           )
