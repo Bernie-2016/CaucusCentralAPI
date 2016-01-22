@@ -1,6 +1,6 @@
 class ReportSerializer < JsonSerializer
   class << self
-    def hash(report)
+    def hash(report, _options = {})
       node = hash_for(report, %w(id created_at source precinct_id))
       node[:phase] = report.aasm_state
 

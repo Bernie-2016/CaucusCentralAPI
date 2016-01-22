@@ -29,8 +29,12 @@ describe Api::V1::PrecinctsController do
     end
 
     context 'user is captain' do
-      it 'returns unauthorized' do
-        expect(subject).to have_http_status(403)
+      it 'returns only basic params' do
+        expect(subject.body).not_to include_json(
+          precincts: [{
+            reports: Precinct.first.reports
+          }]
+        )
       end
     end
   end

@@ -2,10 +2,10 @@ module Api
   module V1
     class PrecinctsController < ApplicationController
       skip_authorization_check only: [:index]
+      skip_before_action :authenticate!, only: [:index]
 
       def index
-        render_unauthenticated! unless current_user.organizer?
-        render json: PrecinctSerializer.root_collection_hash(Precinct.all)
+        render json: PrecinctSerializer.root_collection_hash(Precinct.all, basic: true)
       end
 
       def show

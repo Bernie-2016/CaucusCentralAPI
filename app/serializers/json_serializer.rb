@@ -8,25 +8,25 @@ class JsonSerializer
       res
     end
 
-    def hash(_model)
+    def hash(_model, _options)
       fail 'Override in serializer'
     end
 
-    def root_hash(model)
+    def root_hash(model, options = {})
       model_key = name.gsub('Serializer', '').downcase.intern
       node = {}
-      node[model_key] = hash(model)
+      node[model_key] = hash(model, options)
       node
     end
 
-    def collection_hash(models)
-      models.map { |model| hash(model) }
+    def collection_hash(models, options = {})
+      models.map { |model| hash(model, options) }
     end
 
-    def root_collection_hash(models)
+    def root_collection_hash(models, options = {})
       model_key = name.gsub('Serializer', '').downcase.pluralize.intern
       node = {}
-      node[model_key] = collection_hash(models)
+      node[model_key] = collection_hash(models, options)
       node
     end
   end

@@ -7,7 +7,7 @@ module Api
 
       def index
         render_unauthenticated! unless current_user.organizer?
-        render json: StateSerializer.root_collection_hash(State.all)
+        render json: StateSerializer.root_collection_hash(State.all, skip_precincts: true)
       end
 
       def show
