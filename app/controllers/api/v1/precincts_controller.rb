@@ -5,19 +5,24 @@ module Api
 
       def index
         render_unauthenticated! unless current_user.organizer?
-        render :index, locals: { precincts: Precinct.all }
+        render json: PrecinctSerializer.root_collection_hash(Precinct.all)
       end
 
       def show
         authorize! :read, current_precinct
-        render :show, locals: { precinct: current_precinct }
+        if current_user.organizer?
+          render json: PrecinctSerializer.root_hash(current_precinct)
+        else
+          current_report
+          render json: CaptainPrecinctSerializer.root_hash(current_precinct)
+        end
       end
 
       def begin
         authorize! :update, current_precinct
-        current_precinct.begin!
-        current_precinct.update(total_attendees: params[:precinct][:total_attendees])
-        render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+        current_report.begin!
+        current_report.update(total_attendees: params[:precinct][:total_attendees])
+        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       rescue => e
@@ -28,19 +33,19 @@ module Api
         authorize! :update, current_precinct
 
         # Update delegate counts
-        current_precinct.delegate_counts ||= {}
+        current_report.delegate_counts ||= {}
         (params[:precinct][:delegate_counts] || []).each do |delegate|
           next unless Candidate.keys.include? delegate['key']
-          current_precinct.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
+          current_report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
 
-        if current_precinct.above_threshold?
-          current_precinct.viable!
+        if current_report.above_threshold?
+          current_report.viable!
         else
-          current_precinct.not_viable!
+          current_report.not_viable!
         end
 
-        render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       rescue => e
@@ -51,15 +56,15 @@ module Api
         authorize! :update, current_precinct
 
         # Update delegate counts
-        current_precinct.delegate_counts ||= {}
+        current_report.delegate_counts ||= {}
         (params[:precinct][:delegate_counts] || []).each do |delegate|
           next unless Candidate.keys.include? delegate['key']
-          current_precinct.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
+          current_report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
 
-        current_precinct.apportion!
+        current_report.apportion!
 
-        render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       rescue => e
@@ -69,20 +74,10 @@ module Api
       def update
         authorize! :admin, current_precinct
 
-        precinct_params = params.require(:precinct).permit(:county, :name, :phase, :total_attendees, :total_delegates)
-        phase = precinct_params.delete(:phase)
-        precinct_params[:aasm_state] = phase if phase && Precinct.aasm.states.map(&:name).include?(phase.intern)
-
-        # Update delegate counts
-        delegate_counts = current_precinct.delegate_counts || {}
-        (params[:precinct][:delegate_counts] || []).each do |delegate|
-          next unless Candidate.keys.include? delegate['key']
-          delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
-        end
-        precinct_params[:delegate_counts] = delegate_counts
+        precinct_params = params.require(:precinct).permit(:county, :name, :total_delegates)
 
         if current_precinct.update(precinct_params)
-          render :show, locals: { precinct: current_precinct }, status: :ok, location: api_v1_precinct_url(current_precinct)
+          render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
         else
           render json: { error: current_precinct.errors.inspect }, status: :unprocessable_entity
         end
@@ -96,6 +91,12 @@ module Api
 
       def current_precinct
         @current_precinct ||= Precinct.find(params[:id] || params[:precinct_id])
+      end
+
+      def current_report
+        @current_report ||= Report.find_or_create_by(precinct: current_precinct, user: current_user)
+        @current_report.captain! unless @current_report.captain?
+        @current_report
       end
     end
   end

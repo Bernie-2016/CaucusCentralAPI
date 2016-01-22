@@ -104,11 +104,6 @@ GEM
       tilt
     highline (1.7.8)
     i18n (0.7.0)
-    jbuilder (2.4.0)
-      activesupport (>= 3.0.0, < 5.1)
-      multi_json (~> 1.2)
-    jbuilder_cache_multi (0.0.3)
-      jbuilder (>= 1.5.0, < 3)
     json (1.8.3)
     listen (3.0.5)
       rb-fsevent (>= 0.9.3)
@@ -280,8 +275,6 @@ DEPENDENCIES
   guard
   guard-brakeman
   guard-rspec
-  jbuilder
-  jbuilder_cache_multi
   newrelic_rpm
   oj
   oj_mimic_json

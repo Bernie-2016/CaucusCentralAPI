@@ -17,6 +17,9 @@ class Ability
     end
     can :admin, Precinct if user.organizer?
 
+    can :create, Report
+    can [:read, :admin], Report if user.organizer?
+
     can :create, Token
     can :destroy, Token do |token|
       user == token.user

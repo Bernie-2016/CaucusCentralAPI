@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
   has_secure_password
 
-  belongs_to :precinct
-  has_many :tokens, dependent: :destroy
   belongs_to :invitation
+  belongs_to :precinct
+  has_many :reports
+  has_many :tokens, dependent: :destroy
 
   default_scope -> { order(last_name: :asc, first_name: :asc) }
 

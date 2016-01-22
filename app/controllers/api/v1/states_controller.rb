@@ -7,12 +7,12 @@ module Api
 
       def index
         render_unauthenticated! unless current_user.organizer?
-        render :index, locals: { states: State.all }
+        render json: StateSerializer.root_collection_hash(State.all)
       end
 
       def show
         authorize! :read, current_state
-        render :show, locals: { state: current_state }
+        render json: StateSerializer.root_hash(current_state)
       end
 
       def csv

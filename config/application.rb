@@ -25,6 +25,9 @@ module CaucusCentralAPI
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Load serializers
+    config.autoload_paths << Rails.root.join('app', 'serializers')
+
     # Set default headers to allow cross-origin requests
     config.action_dispatch.default_headers.merge!('Access-Control-Allow-Origin' => '*')
 
