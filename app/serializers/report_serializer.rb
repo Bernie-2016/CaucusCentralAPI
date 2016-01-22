@@ -1,7 +1,7 @@
 class ReportSerializer < JsonSerializer
   class << self
     def hash(report)
-      node = hash_for(report, %w(id source precinct_id))
+      node = hash_for(report, %w(id created_at source precinct_id))
       node[:phase] = report.aasm_state
 
       unless report.start?
