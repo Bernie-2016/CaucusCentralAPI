@@ -34,7 +34,7 @@ module Api
       end
 
       def report_params
-        rp = params.require(:report).permit(:total_attendees, :phase, :delegate_counts)
+        rp = params.require(:report).permit(:total_attendees, :phase, delegate_counts: [:key, :supporters])
 
         phase = rp.delete(:phase)
         rp[:aasm_state] = phase if phase && Report.aasm.states.map(&:name).include?(phase.intern)
