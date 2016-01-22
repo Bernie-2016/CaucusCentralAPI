@@ -124,6 +124,7 @@ GEM
     minitest (5.8.3)
     multi_json (1.11.2)
     nenv (0.2.0)
+    newrelic_rpm (3.14.1.311)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
     notiffany (0.0.8)
@@ -279,6 +280,7 @@ DEPENDENCIES
   guard-rspec
   jbuilder
   jbuilder_cache_multi
+  newrelic_rpm
   oj
   oj_mimic_json
   parser (= 2.3.0.pre.6)
