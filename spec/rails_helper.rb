@@ -1,4 +1,12 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
+require 'codeclimate-test-reporter'
+require 'simplecov'
+
+SimpleCov.formatter = CodeClimate::TestReporter::Formatter if ENV['CIRCLE_ARTIFACTS']
+SimpleCov.start 'rails' do
+  add_group 'Serializers', 'app/serializers'
+  coverage_dir 'spec/coverage'
+end
+
 ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
