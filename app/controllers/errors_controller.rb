@@ -1,4 +1,7 @@
 class ErrorsController < ApplicationController
+  skip_authorization_check
+  skip_before_action :authenticate!
+
   def error_404
     render(:json, nothing: true, status: 404)
   end
