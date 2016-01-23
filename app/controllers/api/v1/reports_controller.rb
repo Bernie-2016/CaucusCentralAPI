@@ -17,10 +17,17 @@ module Api
         authorize! :admin, current_report
 
         if current_report.update(report_params)
-          render json: ReportSerializer.root_hash(report), status: :ok, location: api_v1_report_url(current_report)
+          render json: ReportSerializer.root_hash(current_report), status: :ok
         else
           render json: { error: current_report.errors.inspect }, status: :unprocessable_entity
         end
+      end
+
+      def destroy
+        authorize! :destroy, current_report
+        current_report.destroy
+
+        head :no_content
       end
 
       private
