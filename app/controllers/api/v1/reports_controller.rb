@@ -3,6 +3,11 @@ module Api
     class ReportsController < ApplicationController
       skip_before_action :authenticate!, only: [:create]
 
+      def show
+        authorize! :read, current_report
+        render json: ReportSerializer.root_hash(current_report)
+      end
+
       def create
         report = current_precinct.reports.new(report_params)
         authorize! :create, report

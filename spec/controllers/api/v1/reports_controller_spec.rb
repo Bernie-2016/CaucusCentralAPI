@@ -3,6 +3,39 @@ require 'rails_helper'
 describe Api::V1::ReportsController do
   let!(:precinct) { Fabricate(:precinct) }
 
+  describe '#show' do
+    let!(:report) { Fabricate(:report) }
+
+    subject { get :show, precinct_id: report.precinct_id, id: report.id }
+
+    context 'user is organizer' do
+      before { login Fabricate(:organizer) }
+
+      it 'returns 200' do
+        expect(subject).to have_http_status(200)
+      end
+
+      it 'returns the report' do
+        expect(subject.body).to include_json(
+          report: {
+            id: report.id,
+            precinct_id: report.precinct_id,
+            source: report.source,
+            phase: report.aasm_state
+          }
+        )
+      end
+    end
+
+    context 'user is captain' do
+      before { login Fabricate(:captain) }
+
+      it 'returns unauthorized' do
+        expect(subject).to have_http_status(403)
+      end
+    end
+  end
+
   describe '#create' do
     let(:params) { {} }
 
