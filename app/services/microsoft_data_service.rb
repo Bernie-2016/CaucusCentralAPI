@@ -9,6 +9,11 @@ class MicrosoftDataService
           num = /\d+/.match(result['Precinct']['Name']).try(:[], 0)
           precinct = Precinct.where(county: result['County']['Name'].upcase).where('name like ?', "%#{num}%").first
         end
+        unless precinct
+          num = /\d+/.match(result['Precinct']['Name']).try(:[], 0)
+          name = PrecinctMapService.locate(result['County']['Name'].upcase, num)
+          precinct = Precinct.find_by(name: name) if name
+        end
         next unless precinct
 
         report = precinct.reports.microsoft.first || precinct.reports.microsoft.new
