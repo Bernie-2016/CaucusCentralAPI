@@ -93,23 +93,21 @@ describe Api::V1::PrecinctsController do
     context 'user is organizer' do
       let(:user) { organizer }
 
-      context 'with valid params' do
-        it 'updates the precinct report' do
-          expect(subject).to have_http_status(200)
-          expect(report.reload.total_attendees).to eq(250)
-        end
+      it 'updates the precinct report' do
+        expect(subject).to have_http_status(200)
+        expect(report.reload.total_attendees).to eq(250)
+      end
 
-        it 'returns the precinct' do
-          expect(subject.body).to include_json(
-            precinct: {
-              name: 'Des Moines 1',
-              county: 'Polk',
-              reports: [{
-                total_attendees: 250
-              }]
-            }
-          )
-        end
+      it 'returns the precinct' do
+        expect(subject.body).to include_json(
+          precinct: {
+            name: 'Des Moines 1',
+            county: 'Polk',
+            reports: [{
+              total_attendees: 250
+            }]
+          }
+        )
       end
     end
 
@@ -146,7 +144,7 @@ describe Api::V1::PrecinctsController do
     context 'user is organizer' do
       let(:user) { organizer }
 
-      context 'with valid params' do
+      context 'with viable count' do
         it 'updates the precinct report' do
           expect(subject).to have_http_status(200)
           expect(report.reload.delegate_counts[:sanders]).to eq(75)
@@ -163,6 +161,32 @@ describe Api::V1::PrecinctsController do
                   key: 'sanders',
                   name: 'Bernie Sanders',
                   supporters: 75
+                }]
+              }]
+            }
+          )
+        end
+      end
+
+      context 'with non viable count' do
+        let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 10 }] } }
+
+        it 'updates the precinct report' do
+          expect(subject).to have_http_status(200)
+          expect(report.reload.delegate_counts[:sanders]).to eq(10)
+        end
+
+        it 'returns the precinct' do
+          expect(subject.body).to include_json(
+            precinct: {
+              name: 'Des Moines 1',
+              county: 'Polk',
+              reports: [{
+                phase: 'not_viable',
+                delegate_counts: [{
+                  key: 'sanders',
+                  name: 'Bernie Sanders',
+                  supporters: 10
                 }]
               }]
             }
@@ -204,29 +228,27 @@ describe Api::V1::PrecinctsController do
     context 'user is organizer' do
       let(:user) { organizer }
 
-      context 'with valid params' do
-        it 'updates the precinct report' do
-          expect(subject).to have_http_status(200)
-          expect(report.reload.delegate_counts[:sanders]).to eq(130)
-        end
+      it 'updates the precinct report' do
+        expect(subject).to have_http_status(200)
+        expect(report.reload.delegate_counts[:sanders]).to eq(130)
+      end
 
-        it 'returns the precinct' do
-          expect(subject.body).to include_json(
-            precinct: {
-              name: 'Des Moines 1',
-              county: 'Polk',
-              reports: [{
-                phase: 'apportioned',
-                delegate_counts: [{
-                  key: 'sanders',
-                  name: 'Bernie Sanders',
-                  supporters: 130,
-                  delegates_won: 3
-                }]
+      it 'returns the precinct' do
+        expect(subject.body).to include_json(
+          precinct: {
+            name: 'Des Moines 1',
+            county: 'Polk',
+            reports: [{
+              phase: 'apportioned',
+              delegate_counts: [{
+                key: 'sanders',
+                name: 'Bernie Sanders',
+                supporters: 130,
+                delegates_won: 3
               }]
-            }
-          )
-        end
+            }]
+          }
+        )
       end
     end
 
@@ -275,6 +297,22 @@ describe Api::V1::PrecinctsController do
               total_delegates: 10
             }
           )
+        end
+      end
+
+      context 'with invalid params' do
+        let(:params) { {} }
+
+        it 'returns unprocessable' do
+          expect(subject).to have_http_status(422)
+        end
+      end
+
+      context 'with invalid name' do
+        let(:params) { { name: '' } }
+
+        it 'returns unprocessable' do
+          expect(subject).to have_http_status(422)
         end
       end
     end

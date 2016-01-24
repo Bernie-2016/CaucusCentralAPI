@@ -42,6 +42,8 @@ describe Api::V1::ReportsController do
     subject { post :create, precinct_id: precinct.id, report: params }
 
     context 'with invalid params' do
+      let(:params) { { total_attendees: '' } }
+
       it 'returns unprocessable' do
         expect(subject).to have_http_status(422)
       end
@@ -74,6 +76,20 @@ describe Api::V1::ReportsController do
 
     context 'user is organizer' do
       before { login Fabricate(:organizer) }
+
+      context 'with missing params' do
+        it 'returns unprocessable' do
+          expect(subject).to have_http_status(422)
+        end
+      end
+
+      context 'with invalid params' do
+        let(:params) { { total_attendees: '' } }
+
+        it 'returns unprocessable' do
+          expect(subject).to have_http_status(422)
+        end
+      end
 
       context 'with valid params' do
         context 'reverting to viability' do

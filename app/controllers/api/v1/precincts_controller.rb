@@ -25,8 +25,6 @@ module Api
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
-      rescue => e
-        render json: { error: e.inspect }, status: :unprocessable_entity
       end
 
       def viability
@@ -48,8 +46,6 @@ module Api
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
-      rescue => e
-        render json: { error: e.inspect }, status: :unprocessable_entity
       end
 
       def apportionment
@@ -67,8 +63,6 @@ module Api
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
-      rescue => e
-        render json: { error: e.inspect }, status: :unprocessable_entity
       end
 
       def update
