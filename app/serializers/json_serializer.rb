@@ -9,7 +9,9 @@ class JsonSerializer
     end
 
     def hash(_model, _options)
+      # :nocov:
       fail 'Override in serializer'
+      # :nocov:
     end
 
     def root_hash(model, options = {})

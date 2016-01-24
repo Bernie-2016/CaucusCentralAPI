@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe MicrosoftDataService do
-  before { stub_request(:get, 'https://www.idpcaucuses.com/api/PrecinctCandidateResults').to_return(body: Rails.root.join('spec',  'fixtures', 'microsoft.json')) }
+  before { stub_request(:get, 'https://www.idpcaucuses.com/api/PrecinctCandidateResults').to_return(body: Rails.root.join('spec', 'fixtures', 'microsoft.json')) }
 
   subject { MicrosoftDataService.perform! }
 

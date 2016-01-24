@@ -40,7 +40,7 @@ describe Api::V1::PrecinctsController do
   end
 
   describe '#show' do
-    let!(:precinct) { Fabricate(:precinct) }
+    let!(:precinct) { Fabricate(:precinct, reports: [Fabricate(:report, source: :microsoft), Fabricate(:report, source: :captain, user: captain)], users: [captain]) }
 
     subject { get :show, id: precinct.id }
 
@@ -57,10 +57,22 @@ describe Api::V1::PrecinctsController do
           }
         )
       end
+
+      it 'returns all reports' do
+        expect(JSON.parse(subject.body)['precinct']['reports'].length).to eq(2)
+      end
     end
 
     context 'user is captain' do
       before { login captain }
+
+      it 'returns only captain\'s own report' do
+        expect(JSON.parse(subject.body)['precinct']['reports'].length).to eq(1)
+      end
+    end
+
+    context 'user is another captain' do
+      before { login Fabricate(:captain) }
 
       it 'returns unauthorized' do
         expect(subject).to have_http_status(403)

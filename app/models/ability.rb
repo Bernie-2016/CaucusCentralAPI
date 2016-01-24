@@ -9,9 +9,7 @@ class Ability
     can :manage, Precinct do |precinct|
       if user.organizer?
         true
-      elsif user.unassigned?
-        false
-      else
+      elsif user.captain?
         user.precinct == precinct
       end
     end

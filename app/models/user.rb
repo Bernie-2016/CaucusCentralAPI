@@ -13,10 +13,6 @@ class User < ActiveRecord::Base
 
   enum privilege: [:unassigned, :captain, :organizer]
 
-  def invitation_token
-    invitation.token if invitation
-  end
-
   def invitation_token=(token)
     self.invitation = Invitation.find_by_token(token)
     return unless invitation
