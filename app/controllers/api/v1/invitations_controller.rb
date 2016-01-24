@@ -7,7 +7,7 @@ module Api
         invitation.sender = current_user
 
         if invitation.save
-          render :create, locals: { invitation: invitation }, status: :created
+          render json: InvitationSerializer.root_hash(invitation), status: :created
         else
           render json: invitation.errors, status: :unprocessable_entity
         end

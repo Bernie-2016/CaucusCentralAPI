@@ -8,7 +8,7 @@ module Api
         user = User.find_by(email: params[:email])
         if user && user.authenticate(params[:password])
           token = user.tokens.create(token_type: :session)
-          render :create, locals: { user: user, token: token }
+          render json: SessionSerializer.root_hash(token)
         else
           render_unauthenticated!
         end

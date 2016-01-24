@@ -42,6 +42,10 @@ class ApplicationController < ActionController::API
     render json: {}, status: 403
   end
 
+  def logged_in?
+    current_user.present?
+  end
+
   def current_token
     @current_token ||= Token.find_by(token: request.headers['Authorization'])
   end

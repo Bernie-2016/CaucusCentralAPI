@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
   has_secure_password
 
-  belongs_to :precinct
-  has_many :tokens, dependent: :destroy
   belongs_to :invitation
+  belongs_to :precinct
+  has_many :reports
+  has_many :tokens, dependent: :destroy
 
   default_scope -> { order(last_name: :asc, first_name: :asc) }
 
@@ -11,10 +12,6 @@ class User < ActiveRecord::Base
   validates :invitation, presence: true, uniqueness: { message: 'has already been redeemed' }, on: :create
 
   enum privilege: [:unassigned, :captain, :organizer]
-
-  def invitation_token
-    invitation.token if invitation
-  end
 
   def invitation_token=(token)
     self.invitation = Invitation.find_by_token(token)

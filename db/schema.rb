@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160122024112) do
+ActiveRecord::Schema.define(version: 20160124192513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,16 +29,25 @@ ActiveRecord::Schema.define(version: 20160122024112) do
   create_table "precincts", id: :bigserial, force: :cascade do |t|
     t.string   "name"
     t.string   "county"
-    t.integer  "total_attendees", default: 0
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.text     "delegate_counts"
     t.integer  "total_delegates", default: 0
-    t.string   "aasm_state"
     t.integer  "state_id"
   end
 
   add_index "precincts", ["state_id"], name: "index_precincts_on_state_id", using: :btree
+
+  create_table "reports", id: :bigserial, force: :cascade do |t|
+    t.integer  "precinct_id"
+    t.integer  "user_id"
+    t.integer  "source"
+    t.string   "aasm_state"
+    t.integer  "total_attendees", default: 0
+    t.text     "delegate_counts"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.text     "results_counts"
+  end
 
   create_table "states", id: :bigserial, force: :cascade do |t|
     t.string   "name"

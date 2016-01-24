@@ -1,4 +1,6 @@
-[![Circle CI](https://circleci.com/gh/Bernie-2016/CaucusCentralAPI.svg?style=svg)](https://circleci.com/gh/Bernie-2016/CaucusCentralAPI)
+[![Circle CI](https://circleci.com/gh/Bernie-2016/CaucusCentralAPI.svg?style=shield)](https://circleci.com/gh/Bernie-2016/CaucusCentralAPI) 
+[![Code Climate](https://codeclimate.com/github/Bernie-2016/CaucusCentralAPI/badges/gpa.svg)](https://codeclimate.com/github/Bernie-2016/CaucusCentralAPI) 
+[![Test Coverage](https://codeclimate.com/github/Bernie-2016/CaucusCentralAPI/badges/coverage.svg)](https://codeclimate.com/github/Bernie-2016/CaucusCentralAPI/coverage) 
 
 # CaucusCentralAPI
 

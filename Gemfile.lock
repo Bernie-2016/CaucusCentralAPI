@@ -60,14 +60,21 @@ GEM
       terminal-table (~> 1.4)
     builder (3.2.2)
     cancancan (1.13.1)
+    codeclimate-test-reporter (0.4.8)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     concurrent-ruby (1.0.0)
+    connection_pool (2.2.0)
+    crack (0.4.3)
+      safe_yaml (~> 1.0.0)
     css_parser (1.3.7)
       addressable
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    domain_name (0.5.25)
+      unf (>= 0.0.5, < 1.0.0)
     dotenv (2.0.2)
     dotenv-rails (2.0.2)
       dotenv (= 2.0.2)
@@ -102,13 +109,11 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     haml (4.0.7)
       tilt
+    hashdiff (0.2.3)
     highline (1.7.8)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     i18n (0.7.0)
-    jbuilder (2.4.0)
-      activesupport (>= 3.0.0, < 5.1)
-      multi_json (~> 1.2)
-    jbuilder_cache_multi (0.0.3)
-      jbuilder (>= 1.5.0, < 3)
     json (1.8.3)
     listen (3.0.5)
       rb-fsevent (>= 0.9.3)
@@ -124,6 +129,7 @@ GEM
     minitest (5.8.3)
     multi_json (1.11.2)
     nenv (0.2.0)
+    netrc (0.11.0)
     newrelic_rpm (3.14.1.311)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
@@ -191,6 +197,11 @@ GEM
     rb-fsevent (0.9.7)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
+    redis (3.2.2)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     roadie (3.1.1)
       css_parser (~> 1.3.4)
       nokogiri (>= 1.5.0, < 1.7.0)
@@ -238,6 +249,10 @@ GEM
     sass (3.4.20)
     sexp_processor (4.6.0)
     shellany (0.0.1)
+    sidekiq (4.0.2)
+      concurrent-ruby (~> 1.0)
+      connection_pool (~> 2.2, >= 2.2.0)
+      redis (~> 3.2, >= 3.2.1)
     simplecov (0.11.1)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -263,6 +278,13 @@ GEM
     tins (1.6.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.1)
+    webmock (1.22.6)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
 
 PLATFORMS
   ruby
@@ -272,6 +294,7 @@ DEPENDENCIES
   awesome_print
   bcrypt
   cancancan
+  codeclimate-test-reporter
   database_cleaner
   dotenv-rails
   fabrication
@@ -280,8 +303,6 @@ DEPENDENCIES
   guard
   guard-brakeman
   guard-rspec
-  jbuilder
-  jbuilder_cache_multi
   newrelic_rpm
   oj
   oj_mimic_json
@@ -295,13 +316,16 @@ DEPENDENCIES
   rails (= 4.2.5)
   rails-api
   rails_12factor
+  rest-client
   roadie-rails
   rollbar
   rspec-json_expectations
   rspec-rails (~> 3.0)
   rubocop
+  sidekiq
   simplecov
   spring
+  webmock
 
 BUNDLED WITH
    1.11.2

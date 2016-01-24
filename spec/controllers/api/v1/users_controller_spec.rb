@@ -263,7 +263,7 @@ describe Api::V1::UsersController do
       end
 
       context 'with invalid params' do
-        let(:params) { {} }
+        let(:params) { { email: '' } }
 
         it 'returns unprocessable' do
           expect(subject).to have_http_status(422)
@@ -295,14 +295,27 @@ describe Api::V1::UsersController do
 
   describe '#update_profile' do
     let!(:user) { Fabricate(:user, first_name: 'Bernie') }
+    let(:params) { {} }
 
     before { login user }
 
-    subject { patch :update_profile, user: { first_name: 'Bernard' } }
+    subject { patch :update_profile, user: params }
 
-    it 'updates the user' do
-      expect(subject).to have_http_status(200)
-      expect(user.reload.first_name).to eq('Bernard')
+    context 'with valid params' do
+      let(:params) { { first_name: 'Bernard' } }
+
+      it 'updates the user' do
+        expect(subject).to have_http_status(200)
+        expect(user.reload.first_name).to eq('Bernard')
+      end
+    end
+
+    context 'with invalid params' do
+      let(:params) { { email: '' } }
+
+      it 'returns unprocessable' do
+        expect(subject).to have_http_status(422)
+      end
     end
   end
 

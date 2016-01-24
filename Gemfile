@@ -8,15 +8,14 @@ gem 'bcrypt'
 gem 'cancancan'
 gem 'figaro'
 gem 'foreigner'
-gem 'jbuilder'
-gem 'jbuilder_cache_multi'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'pg'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rails-api'
+gem 'rest-client'
 gem 'roadie-rails'
-gem 'simplecov', require: false
+gem 'sidekiq'
 
 # To fix this warning: warning: 2.2.x-compliant syntax, but you are running 2.3.0.
 gem 'parser', '2.3.0.pre.6' # WORK-AROUND for Ruby 2.2.4
@@ -27,18 +26,24 @@ end
 
 group :development, :test do
   gem 'awesome_print'
-  gem 'database_cleaner'
   gem 'dotenv-rails'
-  gem 'fabrication'
   gem 'guard'
   gem 'guard-brakeman'
   gem 'guard-rspec', require: false
-  gem 'rspec-rails', '~> 3.0'
-  gem 'rspec-json_expectations'
   gem 'pry-rails'
   gem 'pry-nav'
   gem 'pry-stack_explorer'
   gem 'rubocop'
+end
+
+group :test do
+  gem 'codeclimate-test-reporter', require: false
+  gem 'database_cleaner'
+  gem 'fabrication'
+  gem 'rspec-rails', '~> 3.0'
+  gem 'rspec-json_expectations'
+  gem 'simplecov'
+  gem 'webmock'
 end
 
 group :production do

@@ -8,24 +8,24 @@ module Api
 
       def index
         render_unauthenticated! unless current_user.organizer?
-        render :index, locals: { users: User.all }
+        render json: UserSerializer.root_collection_hash(User.all)
       end
 
       def show
         authorize! :read, current_param_user
-        render :show, locals: { user: current_param_user }
+        render json: UserSerializer.root_hash(current_param_user)
       end
 
       def profile
         authorize! :read, current_user
-        render :show, locals: { user: current_user }
+        render json: UserSerializer.root_hash(current_user)
       end
 
       def create
         user = User.new(user_params)
 
         if user.save
-          render :show, locals: { user: user }, status: :created, location: api_v1_user_url(user)
+          render json: UserSerializer.root_hash(user), status: :created, location: api_v1_user_url(user)
         else
           render json: user.errors, status: :unprocessable_entity
         end
@@ -56,14 +56,14 @@ module Api
           end
         end
 
-        render :import, locals: { success_count: success_count, failed_users: failed_users }, status: :created
+        render json: { importedCount: success_count, failedUsers: failed_users }, status: :created
       end
 
       def update
         authorize! :update, current_param_user
 
         if current_param_user.update(user_params)
-          render :show, locals: { user: current_param_user }, status: :ok, location: api_v1_user_url(current_param_user)
+          render json: UserSerializer.root_hash(current_param_user), status: :ok, location: api_v1_user_url(current_param_user)
         else
           render json: current_param_user.errors, status: :unprocessable_entity
         end
@@ -73,7 +73,7 @@ module Api
         authorize! :update, current_user
 
         if current_user.update(user_params)
-          render :show, locals: { user: current_user }, status: :ok, location: api_v1_user_url(current_user)
+          render json: UserSerializer.root_hash(current_user), status: :ok, location: api_v1_user_url(current_user)
         else
           render json: current_user.errors, status: :unprocessable_entity
         end
@@ -83,7 +83,7 @@ module Api
         authorize! :update, current_user
 
         if current_user.update(reset_params)
-          render :show, locals: { user: current_user }, status: :ok, location: api_v1_user_url(current_user)
+          render json: UserSerializer.root_hash(current_user), status: :ok, location: api_v1_user_url(current_user)
         else
           render json: current_user.errors, status: :unprocessable_entity
         end
