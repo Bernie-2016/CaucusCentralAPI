@@ -1,0 +1,134 @@
+{
+  "PrecinctResults": [
+    {
+      "County": {
+        "FIPSCode": 19003,
+        "Name": "Adams"
+      },
+      "Precinct": {
+        "Name": "Adams 3"
+      },
+      "Candidates": [
+        {
+          "Candidate": {
+            "CandidateId": 1,
+            "FirstName": "",
+            "LastName": "Other",
+            "Color": "#FFF7D7",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Other"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 2,
+            "FirstName": "",
+            "LastName": "Uncommitted",
+            "Color": "#E8E9E7",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Uncommitted"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 24,
+            "FirstName": "Hillary",
+            "LastName": "Clinton",
+            "Color": "#7B1317",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Hillary Clinton"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 25,
+            "FirstName": "Martin",
+            "LastName": "O'Malley",
+            "Color": "#A21E23",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Martin O'Malley"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 26,
+            "FirstName": "Bernie",
+            "LastName": "Sanders",
+            "Color": "#D69363",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Bernie Sanders"
+          },
+          "Result": 7,
+          "IsWinner": true,
+          "WinPercentage": 1
+        }
+      ],
+      "ResultTotal": 7
+    },
+    {
+      "County": {
+        "FIPSCode": 19097,
+        "Name": "Jackson"
+      },
+      "Precinct": {
+        "Name": "Jackson 1"
+      },
+      "Candidates": [
+        {
+          "Candidate": {
+            "CandidateId": 1,
+            "FirstName": "",
+            "LastName": "Other",
+            "Color": "#FFF7D7",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Other"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 2,
+            "FirstName": "",
+            "LastName": "Uncommitted",
+            "Color": "#E8E9E7",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Uncommitted"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 24,
+            "FirstName": "Hillary",
+            "LastName": "Clinton",
+            "Color": "#7B1317",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Hillary Clinton"
+          },
+          "Result": 8,
+          "IsWinner": true,
+          "WinPercentage": 1
+        },
+        {
+          "Candidate": {
+            "CandidateId": 25,
+            "FirstName": "Martin",
+            "LastName": "O'Malley",
+            "Color": "#A21E23",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Martin O'Malley"
+          }
+        },
+        {
+          "Candidate": {
+            "CandidateId": 26,
+            "FirstName": "Bernie",
+            "LastName": "Sanders",
+            "Color": "#D69363",
+            "PhotoCDNUrl": "/images/unknown.jpg",
+            "DisplayName": "Bernie Sanders"
+          }
+        }
+      ],
+      "ResultTotal": 8
+    }
+  ]
+}

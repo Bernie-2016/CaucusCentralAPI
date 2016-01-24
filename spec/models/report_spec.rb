@@ -96,4 +96,25 @@ describe Report do
       end
     end
   end
+
+  describe '#candidate_delegates' do
+    let(:results_counts) { {} }
+    let!(:report) { Fabricate(:report, total_attendees: 100, delegate_counts: { sanders: 75 }, results_counts: results_counts, precinct: Fabricate(:precinct, total_delegates: 5)) }
+
+    subject { report.candidate_delegates(:sanders) }
+
+    context 'with results count' do
+      let(:results_counts) { { sanders: 1 } }
+
+      it 'returns results count' do
+        expect(subject).to eq(1)
+      end
+    end
+
+    context 'without results count' do
+      it 'returns calculated results' do
+        expect(subject).to eq(4)
+      end
+    end
+  end
 end

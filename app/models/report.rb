@@ -7,6 +7,7 @@ class Report < ActiveRecord::Base
   enum source: [:microsoft, :captain, :crowd, :manual]
 
   serialize :delegate_counts
+  serialize :results_counts
 
   validates :precinct_id, :aasm_state, :total_attendees, presence: true
 
@@ -39,8 +40,12 @@ class Report < ActiveRecord::Base
   end
 
   def candidate_delegates(key)
-    return 0 if total_attendees == 0
-    (candidate_count(key).to_f * precinct.total_delegates.to_f / total_attendees.to_f).round.to_i
+    if (results_counts || {})[key]
+      results_counts[key]
+    else
+      return 0 if total_attendees == 0
+      (candidate_count(key).to_f * precinct.total_delegates.to_f / total_attendees.to_f).round.to_i
+    end
   end
 
   def threshold

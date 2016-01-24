@@ -13,7 +13,9 @@ gem 'oj_mimic_json'
 gem 'pg'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rails-api'
+gem 'rest-client'
 gem 'roadie-rails'
+gem 'sidekiq'
 
 # To fix this warning: warning: 2.2.x-compliant syntax, but you are running 2.3.0.
 gem 'parser', '2.3.0.pre.6' # WORK-AROUND for Ruby 2.2.4
@@ -41,6 +43,7 @@ group :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'rspec-json_expectations'
   gem 'simplecov'
+  gem 'webmock'
 end
 
 group :production do
