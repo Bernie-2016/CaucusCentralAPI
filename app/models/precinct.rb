@@ -10,4 +10,8 @@ class Precinct < ActiveRecord::Base
   def captain
     User.where(precinct_id: id).first
   end
+
+  def microsoft_report
+    reports.microsoft.first
+  end
 end

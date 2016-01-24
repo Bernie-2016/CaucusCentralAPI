@@ -31,20 +31,17 @@ module Api
       end
 
       def to_csv(precincts)
-        columns = %w(county precinct phase total_attendees sanders clinton omalley total_delegates delegates_awarded)
+        columns = %w(county precinct total_delegates sanders_delegates clinton_delegates omalley_delegates)
         CSV.generate do |csv|
           csv << columns
           precincts.each do |precinct|
             row = []
             row << precinct.county
             row << precinct.name
-            row << precinct.phase_pretty
-            row << precinct.total_attendees
-            row << precinct.candidate_count('sanders')
-            row << precinct.candidate_count('clinton')
-            row << precinct.candidate_count('omalley')
             row << precinct.total_delegates
-            row << precinct.candidate_delegates('sanders')
+            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:sanders) : 'N/A')
+            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:clinton) : 'N/A')
+            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:omalley) : 'N/A')
 
             csv << row
           end

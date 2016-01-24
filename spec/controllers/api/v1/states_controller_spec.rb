@@ -68,13 +68,26 @@ describe Api::V1::StatesController do
     context 'user is organizer' do
       let!(:token) { Fabricate(:token, user: Fabricate(:organizer)).token }
 
-      it 'returns CSV for state results' do
-        pending 'update csv'
-        csv_rows = subject.body.split("\n")
-        expect(csv_rows[0]).to eq('county,precinct,phase,total_attendees,sanders,clinton,omalley,total_delegates,delegates_awarded')
-        p = state.precincts.first
-        first_row = "#{p.county},#{p.name},#{p.phase_pretty},#{p.total_attendees},#{p.candidate_count('sanders')},#{p.candidate_count('clinton')},#{p.candidate_count('omalley')},#{p.total_delegates},#{p.candidate_delegates('sanders')}"
-        expect(csv_rows[1]).to eq(first_row)
+      context 'with no microsoft report' do
+        it 'returns CSV with placeholders' do
+          csv_rows = subject.body.split("\n")
+          expect(csv_rows[0]).to eq('county,precinct,total_delegates,sanders_delegates,clinton_delegates,omalley_delegates')
+          p = state.precincts.first
+          first_row = "#{p.county},#{p.name},#{p.total_delegates},N/A,N/A,N/A"
+          expect(csv_rows[1]).to eq(first_row)
+        end
+      end
+
+      context 'with microsoft report' do
+        before { Fabricate(:report, precinct: state.precincts.first, source: :microsoft, results_counts: { sanders: 5, clinton: 2, omalley: 3 }) }
+
+        it 'returns CSV with placeholders' do
+          csv_rows = subject.body.split("\n")
+          expect(csv_rows[0]).to eq('county,precinct,total_delegates,sanders_delegates,clinton_delegates,omalley_delegates')
+          p = state.precincts.first
+          first_row = "#{p.county},#{p.name},#{p.total_delegates},5,2,3"
+          expect(csv_rows[1]).to eq(first_row)
+        end
       end
     end
 

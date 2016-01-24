@@ -63,15 +63,4 @@ class Report < ActiveRecord::Base
   def above_threshold?
     delegate_counts[:sanders] >= threshold
   end
-
-  def phase_pretty
-    case aasm_state
-    when 'start' then 'Ready to Begin'
-    when 'viability' then 'Viability Phase'
-    when 'not_viable' then 'Not Viable'
-    when 'apportionment' then 'Apportionment Phase'
-    when 'apportioned' then 'Caucus Completed'
-    else 'Invalid precinct state'
-    end
-  end
 end
