@@ -10,7 +10,7 @@ class PrecinctMapService
     private
 
     def maps
-      @@maps ||= IO.readlines(Rails.root.join('lib', 'map.csv')).map { |line| line.strip.split(',') }
+      @maps ||= IO.readlines(Rails.root.join('lib', 'map.csv')).map { |line| line.strip.split(',') }
     end
   end
 end
