@@ -21,7 +21,9 @@ module Api
       def update
         authorize! :admin, current_report
 
-        if current_report.update(report_params)
+        rp = report_params
+        rp.delete(:source)
+        if current_report.update(rp)
           render json: ReportSerializer.root_hash(current_report), status: :ok
         else
           render json: { error: current_report.errors.inspect }, status: :unprocessable_entity
