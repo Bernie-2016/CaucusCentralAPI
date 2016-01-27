@@ -24,3 +24,5 @@
 
 # Ignore test coverage
 /spec/coverage
+
+*.DS_store

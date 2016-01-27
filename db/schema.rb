@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20160124192513) do
     t.integer  "precinct_id"
   end
 
-  create_table "precincts", id: :bigserial, force: :cascade do |t|
+  create_table "precincts", force: :cascade do |t|
     t.string   "name"
     t.string   "county"
     t.datetime "created_at",                  null: false
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(version: 20160124192513) do
     t.string   "email"
     t.string   "password_digest"
     t.integer  "privilege"
-    t.integer  "precinct_id"
     t.integer  "invitation_id"
+    t.integer  "precinct_id"
     t.string   "phone_number"
     t.datetime "created_at"
     t.datetime "updated_at"
