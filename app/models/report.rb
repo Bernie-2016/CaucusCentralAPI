@@ -61,6 +61,6 @@ class Report < ActiveRecord::Base
   end
 
   def above_threshold?(key)
-    (delegate_counts[key] || 0) >= threshold
+    candidate_count(key) >= threshold
   end
 end
