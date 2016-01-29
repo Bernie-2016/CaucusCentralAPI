@@ -3,13 +3,11 @@ class Precinct < ActiveRecord::Base
   has_many :reports
   has_many :users
 
+  has_one :captain, class_name: 'User'
+
   default_scope -> { order(name: :asc) }
 
   validates :name, :county, presence: true
-
-  def captain
-    User.where(precinct_id: id).first
-  end
 
   def microsoft_report
     reports.microsoft.first
