@@ -34,7 +34,7 @@ describe Report do
   describe '#above_threshold?' do
     let!(:report) { Fabricate(:report, total_attendees: 100, delegate_counts: { sanders: bernie_supporters }, precinct: Fabricate(:precinct, total_delegates: total_delegates)) }
 
-    subject { report.above_threshold? }
+    subject { report.above_threshold?(:sanders) }
 
     context 'with 2 delegates' do
       let(:total_delegates) { 2 }

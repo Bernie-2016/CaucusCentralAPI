@@ -37,7 +37,7 @@ module Api
           current_report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
 
-        if current_report.above_threshold?
+        if current_report.above_threshold?(:sanders)
           current_report.viable!
         else
           current_report.not_viable!

@@ -60,7 +60,7 @@ class Report < ActiveRecord::Base
     (total_attendees.to_f * multiplier).ceil
   end
 
-  def above_threshold?
-    delegate_counts[:sanders] >= threshold
+  def above_threshold?(key)
+    (delegate_counts[key] || 0) >= threshold
   end
 end
