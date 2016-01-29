@@ -19,7 +19,7 @@ class MicrosoftDataService
         report = precinct.reports.microsoft.first || precinct.reports.microsoft.new
         report.results_counts ||= {}
         result['Candidates'].each do |candidate|
-          next unless %w(Clinton O'Malley Sanders).include? candidate['Candidate']['LastName']
+          next unless %w(Clinton O'Malley Sanders Uncommitted).include? candidate['Candidate']['LastName']
           report.results_counts[candidate['Candidate']['LastName'].delete('\'').downcase.intern] = candidate['Result'] if candidate['Result']
         end
         report.save unless report.results_counts == {}

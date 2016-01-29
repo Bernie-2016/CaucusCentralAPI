@@ -71,21 +71,21 @@ describe Api::V1::StatesController do
       context 'with no microsoft report' do
         it 'returns CSV with placeholders' do
           csv_rows = subject.body.split("\n")
-          expect(csv_rows[0]).to eq('county,precinct,total_delegates,sanders_delegates,clinton_delegates,omalley_delegates')
+          expect(csv_rows[0]).to eq('county,precinct,total_delegates,sanders_delegates,clinton_delegates,omalley_delegates,uncommitted_delegates')
           p = state.precincts.first
-          first_row = "#{p.county},#{p.name},#{p.total_delegates},N/A,N/A,N/A"
+          first_row = "#{p.county},#{p.name},#{p.total_delegates},N/A,N/A,N/A,N/A"
           expect(csv_rows[1]).to eq(first_row)
         end
       end
 
       context 'with microsoft report' do
-        before { Fabricate(:report, precinct: state.precincts.first, source: :microsoft, results_counts: { sanders: 5, clinton: 2, omalley: 3 }) }
+        before { Fabricate(:report, precinct: state.precincts.first, source: :microsoft, results_counts: { sanders: 5, clinton: 2, omalley: 3, uncommitted: 1 }) }
 
         it 'returns CSV with placeholders' do
           csv_rows = subject.body.split("\n")
-          expect(csv_rows[0]).to eq('county,precinct,total_delegates,sanders_delegates,clinton_delegates,omalley_delegates')
+          expect(csv_rows[0]).to eq('county,precinct,total_delegates,sanders_delegates,clinton_delegates,omalley_delegates,uncommitted_delegates')
           p = state.precincts.first
-          first_row = "#{p.county},#{p.name},#{p.total_delegates},5,2,3"
+          first_row = "#{p.county},#{p.name},#{p.total_delegates},5,2,3,1"
           expect(csv_rows[1]).to eq(first_row)
         end
       end

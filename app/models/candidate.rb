@@ -1,7 +1,7 @@
 class Candidate
   class << self
     def keys
-      %w(sanders clinton omalley)
+      %w(sanders clinton omalley uncommitted)
     end
 
     def name(key)
@@ -21,6 +21,10 @@ class Candidate
         {
           key: 'omalley',
           name: 'Martin O\'Malley'
+        },
+        {
+          key: 'uncommitted',
+          name: 'Uncommitted'
         }
       ]
     end

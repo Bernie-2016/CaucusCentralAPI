@@ -2,7 +2,7 @@ Fabricator(:report) do
   precinct { Fabricate(:precinct) }
   total_attendees 100
   results_counts { {} }
-  delegate_counts { { sanders: 50, clinton: 40, omalley: 10 } }
+  delegate_counts { { sanders: 50, clinton: 40, omalley: 10, uncommitted: 5 } }
   aasm_state :start
 end
 
