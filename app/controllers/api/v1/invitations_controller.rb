@@ -25,6 +25,7 @@ module Api
         authorize! :manage, invitation
         if invitation.user.nil?
           invitation.send_invite
+          head :ok
         else
           render json: { errors: 'Invitation has already been redeemed' }, status: :unprocessable_entity
         end
