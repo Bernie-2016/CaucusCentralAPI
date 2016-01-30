@@ -20,8 +20,8 @@ module Api
 
       def begin
         authorize! :update, current_precinct
-        current_report.begin!
-        current_report.update(total_attendees: params[:precinct][:total_attendees])
+        report = current_precinct.reports.captain.create(user: current_user, total_attendees: params[:precinct][:total_attendees])
+        report.begin!
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
@@ -30,17 +30,20 @@ module Api
       def viability
         authorize! :update, current_precinct
 
+        report = current_precinct.reports.captain.viability.where(user: current_user).first.dup
+
         # Update delegate counts
-        current_report.delegate_counts ||= {}
+        report.delegate_counts ||= {}
         (params[:precinct][:delegate_counts] || []).each do |delegate|
           next unless Candidate.keys.include? delegate['key']
-          current_report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
+          report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
 
-        if current_report.above_threshold?(:sanders)
-          current_report.viable!
+        report.save
+        if report.above_threshold?(:sanders)
+          report.viable!
         else
-          current_report.not_viable!
+          report.not_viable!
         end
 
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
@@ -51,14 +54,17 @@ module Api
       def apportionment
         authorize! :update, current_precinct
 
+        report = current_precinct.reports.captain.apportionment.where(user: current_user).first.dup
+
         # Update delegate counts
-        current_report.delegate_counts ||= {}
+        report.delegate_counts ||= {}
         (params[:precinct][:delegate_counts] || []).each do |delegate|
           next unless Candidate.keys.include? delegate['key']
-          current_report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
+          report.delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
 
-        current_report.apportion!
+        report.save
+        report.apportion!
 
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied

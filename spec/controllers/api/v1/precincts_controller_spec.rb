@@ -83,7 +83,7 @@ describe Api::V1::PrecinctsController do
   describe '#begin' do
     let(:user) { nil }
     let!(:precinct) { Fabricate(:precinct) }
-    let!(:report) { Fabricate(:report, precinct: precinct, user: user) }
+    let!(:report) { Fabricate(:report, source: :captain, precinct: precinct, user: user) }
     let(:params) { { total_attendees: 250 } }
 
     subject { post :begin, precinct_id: precinct.id, precinct: params }
@@ -93,9 +93,13 @@ describe Api::V1::PrecinctsController do
     context 'user is organizer' do
       let(:user) { organizer }
 
+      it 'creates new report' do
+        expect { subject }.to change { precinct.reports.count }.by(1)
+      end
+
       it 'updates the precinct report' do
         expect(subject).to have_http_status(200)
-        expect(report.reload.total_attendees).to eq(250)
+        expect(precinct.reload.reports.first.total_attendees).to eq(250)
       end
 
       it 'returns the precinct' do
@@ -117,9 +121,13 @@ describe Api::V1::PrecinctsController do
       context 'user owns precinct' do
         before { precinct.users << captain }
 
+        it 'creates new report' do
+          expect { subject }.to change { precinct.reports.count }.by(1)
+        end
+
         it 'updates the precinct report' do
           expect(subject).to have_http_status(200)
-          expect(report.reload.total_attendees).to eq(250)
+          expect(precinct.reload.reports.first.total_attendees).to eq(250)
         end
       end
 
@@ -134,7 +142,7 @@ describe Api::V1::PrecinctsController do
   describe '#viability' do
     let(:user) { nil }
     let!(:precinct) { Fabricate(:precinct, total_delegates: 5) }
-    let!(:report) { Fabricate(:viability_report, precinct: precinct, user: user, total_attendees: 250) }
+    let!(:report) { Fabricate(:viability_report, source: :captain, precinct: precinct, user: user, total_attendees: 250) }
     let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 75 }] } }
 
     subject { post :viability, precinct_id: precinct.id, precinct: params }
@@ -145,9 +153,13 @@ describe Api::V1::PrecinctsController do
       let(:user) { organizer }
 
       context 'with viable count' do
+        it 'creates new report' do
+          expect { subject }.to change { precinct.reports.count }.by(1)
+        end
+
         it 'updates the precinct report' do
           expect(subject).to have_http_status(200)
-          expect(report.reload.delegate_counts[:sanders]).to eq(75)
+          expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(75)
         end
 
         it 'returns the precinct' do
@@ -171,9 +183,13 @@ describe Api::V1::PrecinctsController do
       context 'with non viable count' do
         let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 10 }] } }
 
+        it 'creates new report' do
+          expect { subject }.to change { precinct.reports.count }.by(1)
+        end
+
         it 'updates the precinct report' do
           expect(subject).to have_http_status(200)
-          expect(report.reload.delegate_counts[:sanders]).to eq(10)
+          expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(10)
         end
 
         it 'returns the precinct' do
@@ -201,9 +217,13 @@ describe Api::V1::PrecinctsController do
       context 'user owns precinct' do
         before { precinct.users << captain }
 
+        it 'creates new report' do
+          expect { subject }.to change { precinct.reports.count }.by(1)
+        end
+
         it 'updates the precinct report' do
           expect(subject).to have_http_status(200)
-          expect(report.reload.delegate_counts[:sanders]).to eq(75)
+          expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(75)
         end
       end
 
@@ -218,7 +238,7 @@ describe Api::V1::PrecinctsController do
   describe '#apportionment' do
     let(:user) { nil }
     let!(:precinct) { Fabricate(:precinct, total_delegates: 5) }
-    let!(:report) { Fabricate(:apportionment_report, precinct: precinct, user: user, total_attendees: 250) }
+    let!(:report) { Fabricate(:apportionment_report, source: :captain, precinct: precinct, user: user, total_attendees: 250) }
     let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 130 }] } }
 
     subject { post :apportionment, precinct_id: precinct.id, precinct: params }
@@ -228,9 +248,13 @@ describe Api::V1::PrecinctsController do
     context 'user is organizer' do
       let(:user) { organizer }
 
+      it 'creates new report' do
+        expect { subject }.to change { precinct.reports.count }.by(1)
+      end
+
       it 'updates the precinct report' do
         expect(subject).to have_http_status(200)
-        expect(report.reload.delegate_counts[:sanders]).to eq(130)
+        expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(130)
       end
 
       it 'returns the precinct' do
@@ -258,9 +282,13 @@ describe Api::V1::PrecinctsController do
       context 'user owns precinct' do
         before { precinct.users << captain }
 
+        it 'creates new report' do
+          expect { subject }.to change { precinct.reports.count }.by(1)
+        end
+
         it 'updates the precinct report' do
           expect(subject).to have_http_status(200)
-          expect(report.reload.delegate_counts[:sanders]).to eq(130)
+          expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(130)
         end
       end
 

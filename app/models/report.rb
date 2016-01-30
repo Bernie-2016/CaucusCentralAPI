@@ -6,6 +6,8 @@ class Report < ActiveRecord::Base
 
   enum source: [:microsoft, :captain, :crowd, :manual]
 
+  default_scope -> { order(created_at: :desc) }
+
   serialize :delegate_counts
   serialize :results_counts
 
