@@ -52,7 +52,9 @@ class Report < ActiveRecord::Base
 
   def threshold
     multiplier =
-      if precinct.total_delegates <= 2
+      if precinct.total_delegates == 1
+        0.50
+      elsif precinct.total_delegates == 2
         0.25
       elsif precinct.total_delegates == 3
         1.0 / 6.0
