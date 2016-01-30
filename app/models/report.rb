@@ -43,7 +43,7 @@ class Report < ActiveRecord::Base
     if (results_counts || {})[key]
       results_counts[key]
     else
-      return 0 if total_attendees == 0
+      return 0 if total_attendees == 0 || !above_threshold?(key)
       (candidate_count(key).to_f * precinct.total_delegates.to_f / total_attendees.to_f).round.to_i
     end
   end

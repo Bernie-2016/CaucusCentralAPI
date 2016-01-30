@@ -99,11 +99,20 @@ describe Report do
 
   describe '#candidate_delegates' do
     let(:results_counts) { {} }
-    let!(:report) { Fabricate(:report, total_attendees: 100, delegate_counts: { sanders: 75 }, results_counts: results_counts, precinct: Fabricate(:precinct, total_delegates: 5)) }
+    let!(:report) { Fabricate(:report, total_attendees: 100, delegate_counts: { sanders: sanders_supporters }, results_counts: results_counts, precinct: Fabricate(:precinct, total_delegates: 10)) }
 
     subject { report.candidate_delegates(:sanders) }
 
+    context 'with candidate not viable' do
+      let(:sanders_supporters) { 14 }
+
+      it 'returns 0' do
+        expect(subject).to eq(0)
+      end
+    end
+
     context 'with results count' do
+      let(:sanders_supporters) { 75 }
       let(:results_counts) { { sanders: 1 } }
 
       it 'returns results count' do
@@ -112,8 +121,10 @@ describe Report do
     end
 
     context 'without results count' do
+      let(:sanders_supporters) { 75 }
+
       it 'returns calculated results' do
-        expect(subject).to eq(4)
+        expect(subject).to eq(8)
       end
     end
   end
