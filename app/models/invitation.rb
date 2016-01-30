@@ -2,6 +2,10 @@ class Invitation < ActiveRecord::Base
   belongs_to :sender, class_name: 'User'
   belongs_to :precinct
 
+  has_one :user
+
+  default_scope -> { order(email: :asc) }
+
   validates :email, presence: true, format: /\A[^@]+@[^@]+\z/, allow_blank: false
   validates :privilege, presence: true
   validate :recipient_not_registered
@@ -16,6 +20,10 @@ class Invitation < ActiveRecord::Base
     created_at > Date.today - 7.days
   end
 
+  def send_invite
+    ApplicationMailer.invite(id).deliver_now
+  end
+
   private
 
   def recipient_not_registered
@@ -28,9 +36,5 @@ class Invitation < ActiveRecord::Base
       self.token = SecureRandom.hex(32)
       break token unless Invitation.exists?(token: token)
     end
-  end
-
-  def send_invite
-    ApplicationMailer.invite(id).deliver_now
   end
 end

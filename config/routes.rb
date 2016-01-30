@@ -29,7 +29,9 @@ Rails.application.routes.draw do
           post :reset_password
         end
       end
-      resources :invitations, only: [:create]
+      resources :invitations, only: [:index, :create] do
+        post :resend
+      end
     end
   end
 end

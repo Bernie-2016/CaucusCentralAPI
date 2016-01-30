@@ -1,7 +1,10 @@
 class InvitationSerializer < JsonSerializer
   class << self
     def hash(invitation, _options = {})
-      hash_for(invitation, %w(email privilege precinct_id))
+      node = hash_for(invitation, %w(id email privilege precinct_id))
+      node[:precinct_name] = invitation.precinct.try(:name)
+      node[:precinct_state] = invitation.precinct.try(:state).try(:code)
+      node
     end
   end
 end
