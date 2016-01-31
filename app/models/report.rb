@@ -16,7 +16,6 @@ class Report < ActiveRecord::Base
   aasm do
     state :start, initial: true
     state :viability
-    state :not_viable
     state :apportionment
     state :coin_flip
     state :apportioned
@@ -27,10 +26,6 @@ class Report < ActiveRecord::Base
 
     event :viable do
       transitions from: :viability, to: :apportionment
-    end
-
-    event :not_viable do
-      transitions from: :viability, to: :not_viable
     end
 
     event :apportion do

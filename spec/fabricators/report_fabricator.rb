@@ -12,10 +12,6 @@ Fabricator(:viability_report, from: :report) do
   aasm_state :viability
 end
 
-Fabricator(:not_viable_report, from: :report) do
-  aasm_state :not_viable
-end
-
 Fabricator(:apportionment_report, from: :report) do
   aasm_state :apportionment
 end

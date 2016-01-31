@@ -40,11 +40,7 @@ module Api
         end
 
         report.save
-        if report.above_threshold?(:sanders)
-          report.viable!
-        else
-          report.not_viable!
-        end
+        report.viable!
 
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied

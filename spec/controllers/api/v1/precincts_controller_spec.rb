@@ -152,62 +152,30 @@ describe Api::V1::PrecinctsController do
     context 'user is organizer' do
       let(:user) { organizer }
 
-      context 'with viable count' do
-        it 'creates new report' do
-          expect { subject }.to change { precinct.reports.count }.by(1)
-        end
-
-        it 'updates the precinct report' do
-          expect(subject).to have_http_status(200)
-          expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(75)
-        end
-
-        it 'returns the precinct' do
-          expect(subject.body).to include_json(
-            precinct: {
-              name: 'Des Moines 1',
-              county: 'Polk',
-              reports: [{
-                phase: 'apportionment',
-                delegate_counts: [{
-                  key: 'sanders',
-                  name: 'Bernie Sanders',
-                  supporters: 75
-                }]
-              }]
-            }
-          )
-        end
+      it 'creates new report' do
+        expect { subject }.to change { precinct.reports.count }.by(1)
       end
 
-      context 'with non viable count' do
-        let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 10 }] } }
+      it 'updates the precinct report' do
+        expect(subject).to have_http_status(200)
+        expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(75)
+      end
 
-        it 'creates new report' do
-          expect { subject }.to change { precinct.reports.count }.by(1)
-        end
-
-        it 'updates the precinct report' do
-          expect(subject).to have_http_status(200)
-          expect(precinct.reload.reports.first.delegate_counts[:sanders]).to eq(10)
-        end
-
-        it 'returns the precinct' do
-          expect(subject.body).to include_json(
-            precinct: {
-              name: 'Des Moines 1',
-              county: 'Polk',
-              reports: [{
-                phase: 'not_viable',
-                delegate_counts: [{
-                  key: 'sanders',
-                  name: 'Bernie Sanders',
-                  supporters: 10
-                }]
+      it 'returns the precinct' do
+        expect(subject.body).to include_json(
+          precinct: {
+            name: 'Des Moines 1',
+            county: 'Polk',
+            reports: [{
+              phase: 'apportionment',
+              delegate_counts: [{
+                key: 'sanders',
+                name: 'Bernie Sanders',
+                supporters: 75
               }]
-            }
-          )
-        end
+            }]
+          }
+        )
       end
     end
 
