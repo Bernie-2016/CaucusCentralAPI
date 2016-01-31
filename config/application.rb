@@ -3,6 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 require 'csv'
+require 'rack/throttle'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -38,6 +39,8 @@ module CaucusCentralAPI
       g.assets = false
       g.helper = false
     end
+
+    config.middleware.use Rack::Throttle::Minute, max: 20
 
     config.middleware.insert_before 0, 'Rack::Cors' do
       allow do
