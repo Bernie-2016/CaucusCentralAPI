@@ -100,7 +100,7 @@ class Report < ActiveRecord::Base
   private
 
   def adjust_keys?
-    return false unless captain?
+    return [] unless captain?
     keys = Candidate.keys.map do |key|
       key.intern if !above_threshold?(key) && viable?(key)
     end
