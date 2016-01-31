@@ -93,12 +93,16 @@ class Report < ActiveRecord::Base
     candidate_count(key) >= threshold
   end
 
+  def viable?(key)
+    above_threshold?(key) || precinct.reports.captain.apportionment.exists?(user: user) && precinct.reports.captain.apportionment.find_by(user: user).above_threshold?(key)
+  end
+
   private
 
   def adjust_keys?
     return false unless captain?
     keys = Candidate.keys.map do |key|
-      key.intern if !above_threshold?(key) && precinct.reports.captain.apportionment.exists?(user: user) && precinct.reports.captain.apportionment.find_by(user: user).above_threshold?(key)
+      key.intern if !above_threshold?(key) && viable?(key)
     end
     keys.compact
   end
