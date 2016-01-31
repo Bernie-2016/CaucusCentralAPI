@@ -127,5 +127,21 @@ describe Report do
         expect(subject).to eq(8)
       end
     end
+
+    context 'when below threshold but previously viable' do
+      let!(:captain) { Fabricate(:user) }
+      let!(:precinct) { Fabricate(:precinct, total_delegates: 10) }
+      let!(:old_report) { Fabricate(:apportionment_report, precinct: precinct, total_attendees: 100, user: captain, delegate_counts: { sanders: 30 }) }
+      let!(:report) { Fabricate(:apportioned_report, precinct: precinct, total_attendees: 100, user: captain, delegate_counts: { sanders: 1, clinton: 75, omalley: 24 }) }
+
+      it 'returns 1 delegate' do
+        expect(subject).to eq(1)
+      end
+
+      it 'takes the delegate from the next lowest candidate' do
+        expect(report.candidate_delegates(:omalley)).to eq(1)
+        expect(report.candidate_delegates(:clinton)).to eq(8)
+      end
+    end
   end
 end

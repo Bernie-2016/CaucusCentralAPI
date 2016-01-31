@@ -4,6 +4,7 @@ Fabricator(:report) do
   results_counts { {} }
   delegate_counts { { sanders: 50, clinton: 40, omalley: 10, uncommitted: 5 } }
   aasm_state :start
+  source :captain
 end
 
 Fabricator(:viability_report, from: :report) do
