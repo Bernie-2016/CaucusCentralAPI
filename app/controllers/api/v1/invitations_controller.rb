@@ -4,8 +4,9 @@ module Api
       skip_authorization_check only: [:index]
 
       def index
+        accepted_ids = User.pluck(:invitation_id).compact
         render_unauthenticated! unless current_user.organizer?
-        render json: InvitationSerializer.root_collection_hash(Invitation.all)
+        render json: InvitationSerializer.root_collection_hash(Invitation.where.not(id: accepted_ids))
       end
 
       def create

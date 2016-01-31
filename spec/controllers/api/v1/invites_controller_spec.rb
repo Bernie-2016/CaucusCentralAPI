@@ -15,7 +15,7 @@ describe Api::V1::InvitationsController do
     context 'user is an organizer' do
       before { login Fabricate(:organizer) }
       it 'returns all invitations' do
-        expect(JSON.parse(subject.body)['invitations'].length).to eq(11)
+        expect(JSON.parse(subject.body)['invitations'].length).to eq(10)
       end
 
       it 'returns details for each invitation' do
