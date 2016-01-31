@@ -334,12 +334,20 @@ describe Api::V1::PrecinctsController do
             county: 'Polk',
             reports: [{
               phase: 'apportioned',
-              delegate_counts: [{
-                key: 'sanders',
-                name: 'Bernie Sanders',
-                supporters: 50,
-                delegates_won: 3
-              }]
+              delegate_counts: [
+                {
+                  key: 'sanders',
+                  name: 'Bernie Sanders',
+                  supporters: 50,
+                  delegates_won: 3
+                },
+                {
+                  key: 'clinton',
+                  name: 'Hillary Clinton',
+                  supporters: 50,
+                  delegates_won: 2
+                }
+              ]
             }]
           }
         )

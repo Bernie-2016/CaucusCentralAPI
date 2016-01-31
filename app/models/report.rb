@@ -117,6 +117,7 @@ class Report < ActiveRecord::Base
   end
 
   def flip_adjustment(key)
+    key = key.intern
     dm = decimal_map
     (0...dm.length - 1).each do |i|
       next unless dm[i][:decimal] == 0.5 && dm[i + 1][:decimal] == 0.5 && (dm[i][:key] == key || dm[i + 1][:key] == key)
