@@ -190,8 +190,8 @@ describe Report do
     context 'flip winner' do
       let(:flip_winner) { :sanders }
 
-      it 'returns 1' do
-        expect(subject).to eq(1)
+      it 'returns 0' do
+        expect(subject).to eq(0)
       end
     end
 

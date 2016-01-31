@@ -274,6 +274,15 @@ describe Api::V1::PrecinctsController do
           }
         )
       end
+
+      context 'needs coin flip' do
+        let(:params) { { delegate_counts: [{ key: 'sanders', supporters: 125 }, { key: 'clinton', supporters: 125 }] } }
+
+        it 'updates the precinct report' do
+          expect(subject).to have_http_status(200)
+          expect(precinct.reload.reports.first.coin_flip?).to eq(true)
+        end
+      end
     end
 
     context 'user is captain' do
@@ -319,7 +328,6 @@ describe Api::V1::PrecinctsController do
       end
 
       it 'returns the precinct' do
-        binding.pry
         expect(subject.body).to include_json(
           precinct: {
             name: 'Des Moines 1',
