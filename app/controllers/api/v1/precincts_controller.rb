@@ -64,7 +64,26 @@ module Api
         end
 
         report.save
-        report.apportion!
+
+        if report.needs_flip?
+          report.apportion_preflip!
+        else
+          report.apportion!
+        end
+
+        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
+      rescue CanCan::AccessDenied
+        raise
+      end
+
+      def flip
+        authorize! :update, current_precinct
+
+        report = current_precinct.reports.captain.coin_flip.where(user: current_user).first
+
+        winner = params[:precinct][:flip_winner]
+        report.update(flip_winner: winner) if Candidate.keys.include?(winner)
+        report.flip!
 
         render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied

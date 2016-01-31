@@ -18,6 +18,7 @@ class Report < ActiveRecord::Base
     state :viability
     state :not_viable
     state :apportionment
+    state :coin_flip
     state :apportioned
 
     event :begin do
@@ -35,6 +36,14 @@ class Report < ActiveRecord::Base
     event :apportion do
       transitions from: :apportionment, to: :apportioned
     end
+
+    event :apportion_preflip do
+      transitions from: :apportionment, to: :coin_flip
+    end
+
+    event :flip do
+      transitions from: :coin_flip, to: :apportioned
+    end
   end
 
   def candidate_count(key)
@@ -50,6 +59,8 @@ class Report < ActiveRecord::Base
       # Calculate the pre-adjustment total: delegates * candidate supporters / total attendees
       # (with normal math rounding)
       calculated_total = (candidate_count(key).to_f * precinct.total_delegates.to_f / total_attendees.to_f).round.to_i
+
+      calculated_total += flip_adjustment(key) if needs_flip?
 
       # See if any adjustments are needed
       # A candidate who is viable must receive at least 1 delegate, even if some supporters leave and they
@@ -97,6 +108,23 @@ class Report < ActiveRecord::Base
     above_threshold?(key) || precinct.reports.captain.apportionment.exists?(user: user) && precinct.reports.captain.apportionment.find_by(user: user).above_threshold?(key)
   end
 
+  def needs_flip?
+    dm = decimal_map
+    (0...dm.length - 1).each do |i|
+      return true if dm[i][:decimal] == 0.5 && dm[i + 1][:decimal] == 0.5
+    end
+    false
+  end
+
+  def flip_adjustment(key)
+    dm = decimal_map
+    (0...dm.length - 1).each do |i|
+      next unless dm[i][:decimal] == 0.5 && dm[i + 1][:decimal] == 0.5 && (dm[i][:key] == key || dm[i + 1][:key] == key)
+      return -1 unless flip_winner.try(:intern) == key
+    end
+    0
+  end
+
   private
 
   def adjust_keys?
@@ -105,5 +133,13 @@ class Report < ActiveRecord::Base
       key.intern if !above_threshold?(key) && viable?(key)
     end
     keys.compact
+  end
+
+  def decimal_map
+    viable_counts = delegate_counts.sort_by { |_, v| v }.select { |_, v| v > threshold }.reverse
+    viable_counts.map do |c|
+      del = c.last.to_f / total_attendees.to_f * precinct.total_delegates.to_f
+      { key: c.first, decimal: del - del.to_i }
+    end
   end
 end

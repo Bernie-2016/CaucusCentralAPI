@@ -300,6 +300,64 @@ describe Api::V1::PrecinctsController do
     end
   end
 
+  describe '#flip' do
+    let(:user) { nil }
+    let!(:precinct) { Fabricate(:precinct, total_delegates: 5) }
+    let!(:report) { Fabricate(:coin_flip_report, source: :captain, precinct: precinct, user: user, total_attendees: 100, delegate_counts: { sanders: 50, clinton: 50 }) }
+    let(:params) { { flip_winner: 'sanders' } }
+
+    subject { post :flip, precinct_id: precinct.id, precinct: params }
+
+    before { login user }
+
+    context 'user is organizer' do
+      let(:user) { organizer }
+
+      it 'updates the precinct report' do
+        expect(subject).to have_http_status(200)
+        expect(report.reload.flip_winner).to eq('sanders')
+      end
+
+      it 'returns the precinct' do
+        binding.pry
+        expect(subject.body).to include_json(
+          precinct: {
+            name: 'Des Moines 1',
+            county: 'Polk',
+            reports: [{
+              phase: 'apportioned',
+              delegate_counts: [{
+                key: 'sanders',
+                name: 'Bernie Sanders',
+                supporters: 50,
+                delegates_won: 3
+              }]
+            }]
+          }
+        )
+      end
+    end
+
+    context 'user is captain' do
+      let(:user) { captain }
+
+      context 'user owns precinct' do
+        before { precinct.users << captain }
+
+        it 'updates the precinct report' do
+          expect(subject).to have_http_status(200)
+          expect(report.reload.flip_winner).to eq('sanders')
+        end
+      end
+
+      context 'user does not own precinct' do
+        it 'returns unauthorized' do
+          expect(subject).to have_http_status(403)
+        end
+      end
+    end
+  end
+
   describe '#update' do
     let!(:precinct) { Fabricate(:precinct, total_delegates: 5) }
     let(:params) { {} }

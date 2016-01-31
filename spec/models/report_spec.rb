@@ -6,6 +6,14 @@ describe Report do
 
     subject { report.threshold }
 
+    context 'with 1 delegate' do
+      let(:total_delegates) { 1 }
+
+      it 'is 50' do
+        expect(subject).to eq(50)
+      end
+    end
+
     context 'with 2 delegates' do
       let(:total_delegates) { 2 }
 
@@ -141,6 +149,63 @@ describe Report do
       it 'takes the delegate from the next lowest candidate' do
         expect(report.candidate_delegates(:omalley)).to eq(1)
         expect(report.candidate_delegates(:clinton)).to eq(8)
+      end
+    end
+  end
+
+  describe '#needs_flip?' do
+    let(:sanders_count) { nil }
+    let(:clinton_count) { nil }
+    let!(:precinct) { Fabricate(:precinct, total_delegates: 9) }
+    let!(:report) { Fabricate(:report, precinct: precinct, total_attendees: 100, delegate_counts: { sanders: sanders_count, clinton: clinton_count }) }
+
+    subject { report.needs_flip? }
+
+    context 'needs flip' do
+      let(:sanders_count) { 50 }
+      let(:clinton_count) { 50 }
+
+      it 'returns true' do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context 'does not need flip' do
+      let(:sanders_count) { 60 }
+      let(:clinton_count) { 40 }
+
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
+  describe '#flip_adjustment' do
+    let(:flip_winner) { nil }
+    let!(:precinct) { Fabricate(:precinct, total_delegates: 9) }
+    let!(:report) { Fabricate(:report, precinct: precinct, total_attendees: 100, delegate_counts: { sanders: 50, clinton: 50 }, flip_winner: flip_winner) }
+
+    subject { report.flip_adjustment(:sanders) }
+
+    context 'flip winner' do
+      let(:flip_winner) { :sanders }
+
+      it 'returns 1' do
+        expect(subject).to eq(1)
+      end
+    end
+
+    context 'flip loser' do
+      let(:flip_winner) { :clinton }
+
+      it 'returns -1' do
+        expect(subject).to eq(-1)
+      end
+    end
+
+    context 'no flip result' do
+      it 'returns -1' do
+        expect(subject).to eq(-1)
       end
     end
   end
