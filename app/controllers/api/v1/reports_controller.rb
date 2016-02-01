@@ -48,7 +48,7 @@ module Api
       end
 
       def report_params
-        rp = params.require(:report).permit(:total_attendees, :phase, delegate_counts: [:key, :supporters])
+        rp = params.require(:report).permit(:total_attendees, :phase, delegate_counts: [:key, :supporters], results_counts: [:key, :delegates])
 
         phase = rp.delete(:phase)
         rp[:aasm_state] = phase if phase && Report.aasm.states.map(&:name).include?(phase.intern)
@@ -60,6 +60,14 @@ module Api
           delegate_counts[delegate['key'].intern] = delegate['supporters'].to_i
         end
         rp[:delegate_counts] = delegate_counts
+
+        # Update results counts
+        results_counts = current_report.try(:results_counts) || {}
+        (rp.delete(:results_counts) || []).each do |delegate|
+          next unless Candidate.keys.include? delegate['key']
+          results_counts[delegate['key'].intern] = delegate['delegates'].to_i
+        end
+        rp[:results_counts] = results_counts
 
         rp[:source] =
           if logged_in?
