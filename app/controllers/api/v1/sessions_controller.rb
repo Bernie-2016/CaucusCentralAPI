@@ -5,7 +5,7 @@ module Api
       skip_authorization_check only: [:create, :reset_password]
 
       def create
-        user = User.find_by(email: params[:email])
+        user = User.where('lower(email) = ?', params[:email].try(:downcase)).first
         if user && user.authenticate(params[:password])
           token = user.tokens.create(token_type: :session)
           render json: SessionSerializer.root_hash(token)
