@@ -144,7 +144,7 @@ class Report < ActiveRecord::Base
       end
       decimals = decimals.inject(:merge).sort_by { |_, v| v }.reverse.to_h
       winner_decimals = decimals.select { |_k, v| v == decimals[decimals.keys.first] }
-      (final_delegate_counts[winner_decimals.keys.first] || 0) += 1 if winner_decimals.keys.count == 1
+      final_delegate_counts[winner_decimals.keys.first] += 1 if winner_decimals.keys.count == 1 && final_delegate_counts[winner_decimals.keys.first]
     end
 
     final_delegate_counts
