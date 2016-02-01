@@ -16,7 +16,7 @@ module Api
       end
 
       def csv
-        send_data to_csv(current_state.precincts), filename: "#{current_state.name.downcase}.csv"
+        send_data to_csv(Report.all.where(precinct_id: current_state.precincts.pluck(:id))), filename: "#{current_state.name.downcase}.csv"
       end
 
       private
@@ -30,19 +30,26 @@ module Api
         render_unauthenticated! unless token && token.unexpired? && token.user.organizer?
       end
 
-      def to_csv(precincts)
-        columns = %w(county precinct total_delegates sanders_delegates clinton_delegates omalley_delegates uncommitted_delegates)
+      def to_csv(reports)
+        columns = %w(county precinct total_delegates source phase total_attendees sanders_supporters clinton_supporters omalley_supporters uncommitted_supporters sanders_delegates clinton_delegates omalley_delegates uncommitted_delegates)
         CSV.generate do |csv|
           csv << columns
-          precincts.each do |precinct|
+          reports.each do |report|
             row = []
-            row << precinct.county
-            row << precinct.name
-            row << precinct.total_delegates
-            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:sanders) : 'N/A')
-            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:clinton) : 'N/A')
-            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:omalley) : 'N/A')
-            row << (precinct.microsoft_report ? precinct.microsoft_report.candidate_delegates(:uncommitted) : 'N/A')
+            row << report.precinct.county
+            row << report.precinct.name
+            row << report.precinct.total_delegates
+            row << report.source
+            row << report.aasm_state
+            row << report.total_attendees
+            row << report.candidate_count(:sanders)
+            row << report.candidate_count(:clinton)
+            row << report.candidate_count(:omalley)
+            row << report.candidate_count(:uncommitted)
+            row << report.candidate_delegates(:sanders)
+            row << report.candidate_delegates(:clinton)
+            row << report.candidate_delegates(:omalley)
+            row << report.candidate_delegates(:uncommitted)
 
             csv << row
           end

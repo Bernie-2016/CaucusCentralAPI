@@ -67,7 +67,7 @@ class Report < ActiveRecord::Base
         return 1 if adjustment_keys.include? key
 
         # If not, determine if this is the candidate with the next-fewest delegates.
-        deduct_key = delegate_counts.sort_by { |_, v| v }.to_h.select { |_, v| v > threshold }.keys.first
+        deduct_key = (delegate_counts || []).sort_by { |_, v| v }.to_h.select { |_, v| v > threshold }.keys.first
 
         # If this candidate has the next-fewest delegates, they have 1 taken from them to give to the lowest.
         # Theoretically, 2 delegates could be taken from #1 (to give to #2 and #3 to satisfy the requirement),
@@ -132,7 +132,7 @@ class Report < ActiveRecord::Base
   end
 
   def decimal_map
-    viable_counts = delegate_counts.sort_by { |_, v| v }.select { |_, v| v > threshold }.reverse
+    viable_counts = (delegate_counts || []).sort_by { |_, v| v }.select { |_, v| v > threshold }.reverse
     viable_counts.map do |c|
       del = c.last.to_f / total_attendees.to_f * precinct.total_delegates.to_f
       { key: c.first, decimal: del - del.to_i }
