@@ -100,6 +100,7 @@ class Report < ActiveRecord::Base
       h
     end
     sorted_delegate_counts = sorted_delegate_counts.inject(:merge)
+    return {} if sorted_delegate_counts.nil?
 
     final_delegate_counts = sorted_delegate_counts.map do |k, v|
       next unless above_threshold?(k)
