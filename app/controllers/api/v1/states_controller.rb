@@ -46,10 +46,10 @@ module Api
             row << report.candidate_count(:clinton)
             row << report.candidate_count(:omalley)
             row << report.candidate_count(:uncommitted)
-            row << report.candidate_delegates(:sanders)
-            row << report.candidate_delegates(:clinton)
-            row << report.candidate_delegates(:omalley)
-            row << report.candidate_delegates(:uncommitted)
+            row << report.final_candidate_delegates(:sanders)
+            row << report.final_candidate_delegates(:clinton)
+            row << report.final_candidate_delegates(:omalley)
+            row << report.final_candidate_delegates(:uncommitted)
 
             csv << row
           end

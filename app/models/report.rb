@@ -56,6 +56,11 @@ class Report < ActiveRecord::Base
     end
   end
 
+  def final_candidate_delegates(key)
+    return 0 unless apportioned?
+    candidate_delegates(key) || 0
+  end
+
   def threshold
     multiplier =
       if precinct.total_delegates == 1
