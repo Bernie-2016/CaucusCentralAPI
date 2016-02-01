@@ -8,8 +8,4 @@ class Precinct < ActiveRecord::Base
   default_scope -> { order(name: :asc) }
 
   validates :name, :county, presence: true
-
-  def microsoft_report
-    reports.microsoft.first
-  end
 end

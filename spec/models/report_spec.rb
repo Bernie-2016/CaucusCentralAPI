@@ -107,15 +107,15 @@ describe Report do
 
   describe '#candidate_delegates' do
     let(:results_counts) { {} }
-    let!(:report) { Fabricate(:report, total_attendees: 100, delegate_counts: { sanders: sanders_supporters }, results_counts: results_counts, precinct: Fabricate(:precinct, total_delegates: 10)) }
+    let!(:report) { Fabricate(:report, total_attendees: 100, delegate_counts: { sanders: sanders_supporters, clinton: 100 - sanders_supporters }, results_counts: results_counts, precinct: Fabricate(:precinct, total_delegates: 10)) }
 
     subject { report.candidate_delegates(:sanders) }
 
     context 'with candidate not viable' do
       let(:sanders_supporters) { 14 }
 
-      it 'returns 0' do
-        expect(subject).to eq(0)
+      it 'returns nil' do
+        expect(subject).to eq(nil)
       end
     end
 
@@ -129,7 +129,7 @@ describe Report do
     end
 
     context 'without results count' do
-      let(:sanders_supporters) { 75 }
+      let(:sanders_supporters) { 76 }
 
       it 'returns calculated results' do
         expect(subject).to eq(8)
@@ -176,36 +176,6 @@ describe Report do
 
       it 'returns false' do
         expect(subject).to eq(false)
-      end
-    end
-  end
-
-  describe '#flip_adjustment' do
-    let(:flip_winner) { nil }
-    let!(:precinct) { Fabricate(:precinct, total_delegates: 9) }
-    let!(:report) { Fabricate(:report, precinct: precinct, total_attendees: 100, delegate_counts: { sanders: 50, clinton: 50 }, flip_winner: flip_winner) }
-
-    subject { report.flip_adjustment(:sanders) }
-
-    context 'flip winner' do
-      let(:flip_winner) { :sanders }
-
-      it 'returns 0' do
-        expect(subject).to eq(0)
-      end
-    end
-
-    context 'flip loser' do
-      let(:flip_winner) { :clinton }
-
-      it 'returns -1' do
-        expect(subject).to eq(-1)
-      end
-    end
-
-    context 'no flip result' do
-      it 'returns -1' do
-        expect(subject).to eq(-1)
       end
     end
   end
