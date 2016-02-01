@@ -16,6 +16,7 @@ gem 'rack-throttle'
 gem 'rails-api'
 gem 'rest-client'
 gem 'roadie-rails'
+gem 'rollbar'
 gem 'sidekiq'
 
 # To fix this warning: warning: 2.2.x-compliant syntax, but you are running 2.3.0.
@@ -50,6 +51,5 @@ end
 group :production do
   gem 'newrelic_rpm'
   gem 'passenger'
-  gem 'rollbar'
   gem 'rails_12factor'
 end
