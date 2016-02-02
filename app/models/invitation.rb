@@ -14,7 +14,7 @@ class Invitation < ActiveRecord::Base
 
   after_create :send_invite
 
-  enum privilege: [:unassigned, :captain, :organizer, :ro_organizer]
+  enum privilege: [:unassigned, :captain, :organizer]
 
   def unexpired?
     created_at > Date.today - 14.days
