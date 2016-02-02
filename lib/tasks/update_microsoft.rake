@@ -5,4 +5,9 @@ namespace :caucus do
     require Rails.root.join('app', 'workers', 'microsoft_data_worker.rb')
     MicrosoftDataWorker.perform_async
   end
+
+  desc 'Email csv'
+  task :email_csv do
+    EmailWorker.perform_async
+  end
 end
