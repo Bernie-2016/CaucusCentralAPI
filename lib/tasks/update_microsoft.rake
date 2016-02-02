@@ -8,6 +8,7 @@ namespace :caucus do
 
   desc 'Email csv'
   task :email_csv do
+    require Rails.root.join('app', 'workers', 'email_worker.rb')
     EmailWorker.perform_async
   end
 end
