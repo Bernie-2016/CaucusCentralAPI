@@ -101,7 +101,7 @@ class Report < ActiveRecord::Base
     sorted_delegate_counts = sorted_counts.map do |k, v|
       dc = v.to_f * precinct.total_delegates.to_f / total_attendees.to_f
       h = {}
-      h[k] = dc
+      h[k.intern] = dc
       h
     end
     sorted_delegate_counts = sorted_delegate_counts.inject(:merge)
