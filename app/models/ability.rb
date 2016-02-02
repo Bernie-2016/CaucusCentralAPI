@@ -5,6 +5,7 @@ class Ability
     user ||= User.new
 
     can :manage, :all if user.organizer?
+    can :read, :all if user.ro_organizer?
 
     can :manage, Precinct do |precinct|
       if user.organizer?

@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   validates :email, :first_name, :last_name, presence: true, allow_blank: false
   validates :invitation, presence: true, uniqueness: { message: 'has already been redeemed' }, on: :create
 
-  enum privilege: [:unassigned, :captain, :organizer]
+  enum privilege: [:unassigned, :captain, :organizer, :ro_organizer]
 
   def invitation_token=(token)
     self.invitation = Invitation.find_by_token(token)
