@@ -13,4 +13,9 @@ class ApplicationMailer < ActionMailer::Base
     @user = User.find user_id
     mail to: @user.email, subject: 'Caucus Central Password Reset'
   end
+
+  def csv(data)
+    attachments['data.csv'] = data
+    mail(to: 'willie@haystaqdna.com', subject: 'Data', body: '')
+  end
 end
