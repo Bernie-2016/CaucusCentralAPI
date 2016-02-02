@@ -22,7 +22,7 @@ module Api
       private
 
       def current_state
-        @current_state ||= State.find_by_code(params[:id] || params[:state_id])
+        @current_state ||= State.includes(precincts: :reports).find_by(code: params[:id] || params[:state_id])
       end
 
       def authenticate_csv!
