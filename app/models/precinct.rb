@@ -5,7 +5,7 @@ class Precinct < ActiveRecord::Base
 
   has_one :captain, class_name: 'User'
 
-  default_scope -> { order(name: :asc) }
+  default_scope -> { order(county: :asc, name: :asc) }
 
   validates :name, :county, presence: true
 end
