@@ -5,7 +5,7 @@ module Api
       skip_before_action :authenticate!, only: [:index]
 
       def index
-        render json: PrecinctSerializer.root_collection_hash(Precinct.all, basic: true)
+        render json: PrecinctSerializer.root_collection_hash(State.current.precincts.all, basic: true)
       end
 
       def show
