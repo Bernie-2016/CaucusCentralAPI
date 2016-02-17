@@ -31,6 +31,10 @@ class Ability
       user == token.user
     end
 
+    can :manage, Invitation do |invitation|
+      user.state == invitation.state && user.organizer?
+    end
+
     can :manage, User do |u|
       user.state == u.state && user.organizer? || user == u
     end

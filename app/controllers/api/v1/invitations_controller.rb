@@ -13,9 +13,9 @@ module Api
 
       def create
         invitation = Invitation.new(invitation_params)
-        authorize! :create, invitation
         invitation.sender = current_user
         invitation.state = current_user.state
+        authorize! :create, invitation
 
         if invitation.save
           render json: InvitationSerializer.root_hash(invitation), status: :created
