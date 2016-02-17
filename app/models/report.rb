@@ -17,7 +17,6 @@ class Report < ActiveRecord::Base
     state :start, initial: true
     state :viability
     state :apportionment
-    state :coin_flip
     state :apportioned
 
     event :begin do
@@ -30,14 +29,6 @@ class Report < ActiveRecord::Base
 
     event :apportion do
       transitions from: :apportionment, to: :apportioned
-    end
-
-    event :apportion_preflip do
-      transitions from: :apportionment, to: :coin_flip
-    end
-
-    event :flip do
-      transitions from: :coin_flip, to: :apportioned
     end
   end
 
@@ -83,18 +74,6 @@ class Report < ActiveRecord::Base
     above_threshold?(key) || precinct.reports.captain.apportionment.exists?(user: user) && precinct.reports.captain.apportionment.find_by(user: user).above_threshold?(key)
   end
 
-  def needs_flip?
-    viable_counts = (delegate_counts || []).sort_by { |_, v| v }.select { |_, v| v > threshold }.reverse
-    viable_counts = viable_counts.map do |c|
-      del = c.last.to_f / total_attendees.to_f * precinct.total_delegates.to_f
-      { key: c.first, decimal: del - del.to_i }
-    end
-    (0...viable_counts.length - 1).each do |i|
-      return true if viable_counts[i][:decimal] == 0.5 && viable_counts[i + 1][:decimal] == 0.5
-    end
-    false
-  end
-
   def calculated_delegates
     sorted_counts = (delegate_counts || []).sort_by { |_, v| v }.reverse.to_h
 
@@ -115,21 +94,6 @@ class Report < ActiveRecord::Base
     end
     final_delegate_counts = final_delegate_counts.compact.inject(:merge)
     return {} if final_delegate_counts.nil?
-
-    # Determine if a flip adjustment is needed.
-    point_fives = {}
-    sorted_delegate_counts.to_a.each_with_index do |c, i|
-      next if i + 1 == sorted_delegate_counts.to_a.size
-      count = c.last
-      nc = sorted_delegate_counts.to_a[i + 1]
-      next_count = nc.last
-      if count - count.to_i == 0.5 && next_count - next_count.to_i == 0.5
-        point_fives[c.first] = c.last
-        point_fives[nc.first] = nc.last
-      end
-    end
-    # Perform any flip adjustments.
-    point_fives.each { |five, _| final_delegate_counts[five] -= 1 unless flip_winner.try(:intern) == five }
 
     # Perform any adjustments based on minimum-1-delegate rule.
     adjust_keys = []

@@ -152,31 +152,4 @@ describe Report do
       end
     end
   end
-
-  describe '#needs_flip?' do
-    let(:sanders_count) { nil }
-    let(:clinton_count) { nil }
-    let!(:precinct) { Fabricate(:precinct, total_delegates: 9) }
-    let!(:report) { Fabricate(:report, precinct: precinct, total_attendees: 100, delegate_counts: { sanders: sanders_count, clinton: clinton_count }) }
-
-    subject { report.needs_flip? }
-
-    context 'needs flip' do
-      let(:sanders_count) { 50 }
-      let(:clinton_count) { 50 }
-
-      it 'returns true' do
-        expect(subject).to eq(true)
-      end
-    end
-
-    context 'does not need flip' do
-      let(:sanders_count) { 60 }
-      let(:clinton_count) { 40 }
-
-      it 'returns false' do
-        expect(subject).to eq(false)
-      end
-    end
-  end
 end
