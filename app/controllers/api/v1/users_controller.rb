@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      skip_authorization_check only: [:index, :create]
+      skip_authorization_check only: [:index, :create, :import]
       skip_before_action :authenticate!, only: [:create, :reset_password]
       before_action :authenticate_create!, only: [:create]
       before_action :authenticate_reset_password!, only: [:reset_password]
@@ -34,7 +34,7 @@ module Api
       end
 
       def import
-        authorize! :create, User.new
+        render_unauthenticated! unless current_user.organizer? || current_user.admin?
 
         success_count = 0
         failed_users = []
@@ -44,6 +44,7 @@ module Api
             failed_users << { user: user, reason: 'User already exists' }
           else
             state = State.find_by(code: user[:code])
+            render_unauthenticated! unless current_user.admin? || state == current_user.state
             if state
               precinct = state.precincts.find_by(county: user[:county], name: user[:precinct])
               if precinct
