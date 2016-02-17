@@ -47,7 +47,7 @@ module Api
             if state
               precinct = state.precincts.find_by(county: user[:county], name: user[:precinct])
               if precinct
-                Invitation.create(sender: current_user, email: user[:email], privilege: :captain, precinct: precinct)
+                Invitation.create(sender: current_user, email: user[:email], privilege: :captain, state: state, precinct: precinct)
                 success_count += 1
               else
                 failed_users << { user: user, reason: 'Precinct does not exist' }

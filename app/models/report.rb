@@ -18,6 +18,7 @@ class Report < ActiveRecord::Base
     state :viability
     state :apportionment
     state :apportioned
+    state :completed
 
     event :begin do
       transitions from: :start, to: :viability
@@ -29,6 +30,10 @@ class Report < ActiveRecord::Base
 
     event :apportion do
       transitions from: :apportionment, to: :apportioned
+    end
+
+    event :complete do
+      transitions from: :apportioned, to: :completed
     end
   end
 

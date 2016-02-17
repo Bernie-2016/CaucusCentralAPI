@@ -9,6 +9,7 @@ Rails.application.routes.draw do
         post :begin
         post :viability
         post :apportionment
+        post :completed
 
         resources :reports, only: [:show, :create, :update, :destroy]
       end

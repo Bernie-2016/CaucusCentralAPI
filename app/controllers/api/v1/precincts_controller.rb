@@ -67,6 +67,26 @@ module Api
         raise
       end
 
+      def completed
+        authorize! :update, current_precinct
+
+        report = current_precinct.reports.captain.apportioned.where(user: current_user).first.dup
+
+        # Update results counts
+        report.results_counts ||= {}
+        (params[:precinct][:results_counts] || []).each do |delegate|
+          next unless Candidate.keys.include? delegate['key']
+          report.results_counts[delegate['key'].intern] = delegate['delegates'].to_i
+        end
+
+        report.save
+        report.complete!
+
+        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
+      rescue CanCan::AccessDenied
+        raise
+      end
+
       def update
         authorize! :admin, current_precinct
 
