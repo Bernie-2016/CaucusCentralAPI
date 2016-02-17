@@ -32,7 +32,7 @@ class Ability
     end
 
     can :manage, User do |u|
-      user == u
+      user.state == u.state && user.organizer? || user == u
     end
   end
 end
