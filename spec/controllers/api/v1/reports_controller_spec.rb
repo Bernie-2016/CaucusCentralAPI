@@ -8,8 +8,8 @@ describe Api::V1::ReportsController do
 
     subject { get :show, precinct_id: report.precinct_id, id: report.id }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       it 'returns 200' do
         expect(subject).to have_http_status(200)
@@ -74,8 +74,8 @@ describe Api::V1::ReportsController do
 
     subject { patch :update, precinct_id: report.precinct_id, id: report.id, report: params }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       context 'with missing params' do
         it 'returns unprocessable' do
@@ -148,8 +148,8 @@ describe Api::V1::ReportsController do
 
     subject { delete :destroy, precinct_id: report.precinct_id, id: report.id }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       it 'returns 204' do
         expect(subject).to have_http_status(204)

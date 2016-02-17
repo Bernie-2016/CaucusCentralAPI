@@ -6,8 +6,18 @@ module Api
       before_action :authenticate_csv!, only: [:csv]
 
       def index
-        render_unauthenticated! unless current_user.organizer?
-        render json: StateSerializer.root_collection_hash(State.all, skip_precincts: true)
+        render_unauthenticated! unless current_user.organizer? || current_user.admin?
+        states =
+          if current_user.organizer?
+            if current_user.state
+              [current_user.state]
+            else
+              []
+            end
+          else
+            State.all
+          end
+        render json: StateSerializer.root_collection_hash(states, skip_precincts: true)
       end
 
       def show

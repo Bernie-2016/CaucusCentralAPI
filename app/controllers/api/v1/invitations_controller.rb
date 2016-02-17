@@ -5,14 +5,17 @@ module Api
 
       def index
         accepted_ids = User.pluck(:invitation_id).compact
-        render_unauthenticated! unless current_user.organizer?
-        render json: InvitationSerializer.root_collection_hash(Invitation.where.not(id: accepted_ids))
+        render_unauthenticated! unless current_user.organizer? || current_user.admin?
+        invitations = Invitation.where.not(id: accepted_ids)
+        invitations = invitations.where(precinct_id: current_user.state.precincts.pluck(:id)) unless current_user.admin?
+        render json: InvitationSerializer.root_collection_hash(invitations)
       end
 
       def create
         invitation = Invitation.new(invitation_params)
         authorize! :create, invitation
         invitation.sender = current_user
+        invitation.state = current_user.state
 
         if invitation.save
           render json: InvitationSerializer.root_hash(invitation), status: :created

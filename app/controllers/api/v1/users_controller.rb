@@ -7,8 +7,10 @@ module Api
       before_action :authenticate_reset_password!, only: [:reset_password]
 
       def index
-        render_unauthenticated! unless current_user.organizer?
-        render json: UserSerializer.root_collection_hash(User.all)
+        render_unauthenticated! unless current_user.organizer? || current_user.admin?
+        users = User.all
+        users = users.where(state: current_user.state) unless current_user.admin?
+        render json: UserSerializer.root_collection_hash(users)
       end
 
       def show

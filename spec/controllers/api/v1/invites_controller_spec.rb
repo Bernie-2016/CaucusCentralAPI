@@ -12,8 +12,8 @@ describe Api::V1::InvitationsController do
 
     subject { get :index }
 
-    context 'user is an organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is an admin' do
+      before { login Fabricate(:admin) }
       it 'returns all invitations' do
         expect(JSON.parse(subject.body)['invitations'].length).to eq(10)
       end
@@ -43,8 +43,8 @@ describe Api::V1::InvitationsController do
 
     subject { post :create, params }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       context 'with valid params' do
         it 'creates the invitation' do
@@ -94,8 +94,8 @@ describe Api::V1::InvitationsController do
 
     subject { post :resend, invitation_id: invitation.id }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       context 'invitation exists' do
         it 'sends mail' do

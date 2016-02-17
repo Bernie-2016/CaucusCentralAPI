@@ -2,7 +2,6 @@ class EmailWorker
   include Sidekiq::Worker
 
   def perform
-    state = State.includes(precincts: :reports).find_by(code: 'IA')
     columns = %w(county precinct total_delegates source phase total_attendees sanders_supporters clinton_supporters omalley_supporters uncommitted_supporters sanders_delegates clinton_delegates omalley_delegates uncommitted_delegates)
     csv_data = CSV.generate do |csv|
       csv << columns

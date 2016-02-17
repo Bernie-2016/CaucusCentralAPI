@@ -6,8 +6,8 @@ describe Api::V1::StatesController do
 
     subject { get :index }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       it 'returns all states' do
         expect(JSON.parse(subject.body)['states'].length).to eq(13)
@@ -36,8 +36,8 @@ describe Api::V1::StatesController do
 
     subject { get :show, id: 'IA' }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       it 'returns details for state' do
         expect(subject.body).to include_json(
@@ -65,8 +65,8 @@ describe Api::V1::StatesController do
 
     subject { get :csv, state_id: 'IA', token: token }
 
-    context 'user is organizer' do
-      let!(:token) { Fabricate(:token, user: Fabricate(:organizer)).token }
+    context 'user is admin' do
+      let!(:token) { Fabricate(:token, user: Fabricate(:admin)).token }
 
       context 'with no microsoft report' do
         it 'returns CSV with placeholders' do

@@ -12,8 +12,8 @@ describe Api::V1::UsersController do
 
     subject { get :index }
 
-    context 'user is an organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is an admin' do
+      before { login Fabricate(:admin) }
       it 'returns all users' do
         expect(JSON.parse(subject.body)['users'].length).to eq(11)
       end
@@ -43,8 +43,8 @@ describe Api::V1::UsersController do
 
     subject { get :show, id: user.id }
 
-    context 'user is an organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is an admin' do
+      before { login Fabricate(:admin) }
 
       it 'returns details for user' do
         expect(subject.body).to include_json(
@@ -161,10 +161,10 @@ describe Api::V1::UsersController do
     let(:params) { [] }
     subject { post :import, users: params }
 
-    context 'user is organizer' do
+    context 'user is admin' do
       let!(:precinct) { Fabricate(:precinct, state: State.find_by(code: 'IA')) }
 
-      before { login Fabricate(:organizer) }
+      before { login Fabricate(:admin) }
 
       context 'with valid params' do
         let(:params) { [{ code: 'IA', county: precinct.county, precinct: precinct.name, email: 'joe@vol.com' }] }
@@ -244,8 +244,8 @@ describe Api::V1::UsersController do
 
     subject { patch :update, id: user.id, user: params }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       context 'with valid params' do
         it 'updates the user' do
@@ -364,8 +364,8 @@ describe Api::V1::UsersController do
 
     subject { delete :destroy, id: user.id }
 
-    context 'user is organizer' do
-      before { login Fabricate(:organizer) }
+    context 'user is admin' do
+      before { login Fabricate(:admin) }
 
       it 'returns 204' do
         expect(subject).to have_http_status(204)

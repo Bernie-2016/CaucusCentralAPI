@@ -1,5 +1,6 @@
 class Invitation < ActiveRecord::Base
   belongs_to :sender, class_name: 'User'
+  belongs_to :state
   belongs_to :precinct
 
   has_one :user
