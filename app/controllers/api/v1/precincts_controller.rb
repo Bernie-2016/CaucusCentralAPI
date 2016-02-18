@@ -14,7 +14,7 @@ module Api
           render json: PrecinctSerializer.root_hash(current_precinct)
         else
           current_report
-          render json: CaptainPrecinctSerializer.root_hash(current_precinct)
+          render json: CaptainPrecinctSerializer.root_hash(current_precinct, user: current_user)
         end
       end
 
@@ -22,7 +22,7 @@ module Api
         authorize! :update, current_precinct
         report = current_precinct.reports.captain.create(user: current_user, total_attendees: params[:precinct][:total_attendees])
         report.begin!
-        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
+        render json: CaptainPrecinctSerializer.root_hash(current_precinct, user: current_user), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       end
@@ -42,7 +42,7 @@ module Api
         report.save
         report.viable!
 
-        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
+        render json: CaptainPrecinctSerializer.root_hash(current_precinct, user: current_user), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       end
@@ -62,7 +62,7 @@ module Api
         report.save
         report.apportion!
 
-        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
+        render json: CaptainPrecinctSerializer.root_hash(current_precinct, user: current_user), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       end
@@ -82,7 +82,7 @@ module Api
         report.save
         report.complete!
 
-        render json: PrecinctSerializer.root_hash(current_precinct), status: :ok, location: api_v1_precinct_url(current_precinct)
+        render json: CaptainPrecinctSerializer.root_hash(current_precinct, user: current_user), status: :ok, location: api_v1_precinct_url(current_precinct)
       rescue CanCan::AccessDenied
         raise
       end
