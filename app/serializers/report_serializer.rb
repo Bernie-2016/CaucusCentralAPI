@@ -1,6 +1,6 @@
 class ReportSerializer < JsonSerializer
   class << self
-    def hash(report, _options = {})
+    def hash(report, options = {})
       node = hash_for(report, %w(id created_at source precinct_id))
       node[:phase] = report.aasm_state
 
@@ -14,7 +14,7 @@ class ReportSerializer < JsonSerializer
             key_node[:key] = key
             key_node[:name] = Candidate.name(key)
             key_node[:supporters] = report.candidate_count(key)
-            key_node[:viable] = report.viable?(key)
+            key_node[:viable] = report.viable?(key) unless options[:basic_reports]
             key_node[:delegates_won] = report.candidate_delegates(key) if report.completed?
             key_node
           end

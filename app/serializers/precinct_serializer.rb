@@ -7,7 +7,7 @@ class PrecinctSerializer < JsonSerializer
         node[:captain_id] = precinct.captain.try(:id)
         node[:captain_last_name] = precinct.captain.try(:last_name)
         node[:captain_first_name] = precinct.captain.try(:first_name)
-        node[:reports] = ReportSerializer.collection_hash(precinct.reports) unless options[:skip_reports]
+        node[:reports] = ReportSerializer.collection_hash(precinct.reports, basic_reports: options[:basic_reports])
       end
       node
     end

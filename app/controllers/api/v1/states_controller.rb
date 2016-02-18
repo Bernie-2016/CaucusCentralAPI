@@ -22,7 +22,7 @@ module Api
 
       def show
         authorize! :read, current_state
-        render json: StateSerializer.root_hash(current_state, skip_reports: current_state.code == 'IA')
+        render json: StateSerializer.root_hash(current_state, basic_reports: true)
       end
 
       def csv
