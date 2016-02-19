@@ -6,6 +6,9 @@ class NvDataService
       data = JSON.parse(response)
       unfound = []
       data.each do |key, arr|
+        # Skip if no data yet.
+        next if arr[1..5].reduce(:+) == 0        
+
         # Get name out of key.
         key = key.split('_')
         name = key.last
