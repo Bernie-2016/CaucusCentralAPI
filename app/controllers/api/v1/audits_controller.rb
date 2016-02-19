@@ -23,8 +23,9 @@ module Api
       end
 
       def csv
+        user = Token.session.find_by(token: params[:token]).user
         audits = Audit.all.includes(:precinct)
-        audits = audits.where(precinct_id: current_user.state.precincts.pluck(:id)) unless current_user.admin?
+        audits = audits.where(precinct_id: user.state.precincts.pluck(:id)) unless user.admin?
         send_data to_csv(audits), filename: 'audits.csv'
       end
 
