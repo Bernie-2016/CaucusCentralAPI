@@ -11,7 +11,6 @@ class AuditService
           audit = precinct.audits.miscalculation.new
           audit.supporter_counts = captain_report.delegate_counts
           audit.reported_results = captain_report.results_counts
-          audit.official_results = official_report.results_counts
           audit.save
         end
 
