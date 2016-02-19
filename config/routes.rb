@@ -5,7 +5,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :audits, only: [:index, :update]
+      resources :audits, only: [:index, :update] do
+        collection do
+          get :csv
+        end
+      end
       resources :precincts, only: [:index, :show, :update] do
         post :begin
         post :viability
