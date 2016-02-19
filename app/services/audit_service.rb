@@ -18,13 +18,12 @@ class AuditService
         # Check for delegate mismatches.
         official_report = precinct.reports.microsoft.first
         next unless official_report
-        if captain_report.results_counts[:sanders] != official_report.results_counts[:sanders] && precinct.audits.delegate_mismatch.none?
-          audit = precinct.audits.delegate_mismatch.new
-          audit.supporter_counts = captain_report.delegate_counts
-          audit.reported_results = captain_report.results_counts
-          audit.official_results = official_report.results_counts
-          audit.save
-        end
+        next unless captain_report.results_counts[:sanders] != official_report.results_counts[:sanders] && precinct.audits.delegate_mismatch.none?
+        audit = precinct.audits.delegate_mismatch.new
+        audit.supporter_counts = captain_report.delegate_counts
+        audit.reported_results = captain_report.results_counts
+        audit.official_results = official_report.results_counts
+        audit.save
       end
     end
   end

@@ -4,10 +4,9 @@ class NvDataService
       nv = State.find_by(code: 'NV')
       response = RestClient.get 'http://nvcaucuses.com/wp-content/themes/ndp/assets/map/data/data.json', accept: :json
       data = JSON.parse(response)
-      unfound = []
       data.each do |key, arr|
         # Skip if no data yet.
-        next if arr[1..5].reduce(:+) == 0        
+        next if arr[1..5].reduce(:+) == 0
 
         # Get name out of key.
         key = key.split('_')
@@ -28,7 +27,7 @@ class NvDataService
 
         # Lookup name.
         precinct = nv.precincts.where('upper(county) = ?', county).where(name: name).first
-        
+
         report = precinct.reports.microsoft.first || precinct.reports.microsoft.new(aasm_state: :completed)
         report.results_counts ||= {}
         report.results_counts[:sanders] = arr[2]
