@@ -16,7 +16,7 @@ class MicrosoftDataService
         end
         next unless precinct
 
-        report = precinct.reports.microsoft.first || precinct.reports.microsoft.new(aasm_state: :apportioned)
+        report = precinct.reports.microsoft.first || precinct.reports.microsoft.new(aasm_state: :completed)
         report.results_counts ||= {}
         result['Candidates'].each do |candidate|
           next unless %w(Clinton O'Malley Sanders Uncommitted).include? candidate['Candidate']['LastName']
