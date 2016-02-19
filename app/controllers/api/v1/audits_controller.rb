@@ -2,6 +2,8 @@ module Api
   module V1
     class AuditsController < ApplicationController
       skip_authorization_check only: [:index]
+      skip_before_action :authenticate!, only: [:csv]
+      before_action :authenticate_csv!, only: [:csv]
 
       def index
         render_unauthenticated! unless current_user.organizer? || current_user.admin?
@@ -34,6 +36,11 @@ module Api
 
       def audit_params
         params.require(:audit).permit(:status)
+      end
+
+      def authenticate_csv!
+        token = Token.session.find_by(token: params[:token])
+        render_unauthenticated! unless token && token.unexpired? && (token.user.organizer? || token.user.admin?)
       end
 
       def to_csv(audits)

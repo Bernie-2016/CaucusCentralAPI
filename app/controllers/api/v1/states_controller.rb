@@ -38,7 +38,7 @@ module Api
 
       def authenticate_csv!
         token = Token.session.find_by(token: params[:token])
-        render_unauthenticated! unless token && token.unexpired? && token.user.organizer?
+        render_unauthenticated! unless token && token.unexpired? && (token.user.organizer? && token.user.state == current_state || token.user.admin?)
       end
 
       def to_csv(reports)
