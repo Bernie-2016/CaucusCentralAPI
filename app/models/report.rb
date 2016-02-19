@@ -53,7 +53,7 @@ class Report < ActiveRecord::Base
   end
 
   def final_candidate_delegates(key)
-    return 0 unless apportioned?
+    return 0 unless apportioned? || completed?
     candidate_delegates(key) || 0
   end
 
