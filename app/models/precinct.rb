@@ -1,5 +1,6 @@
 class Precinct < ActiveRecord::Base
   belongs_to :state
+  has_many :audits
   has_many :reports
   has_many :users
 

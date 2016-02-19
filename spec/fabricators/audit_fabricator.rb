@@ -1,0 +1,2 @@
+Fabricator(:audit) do
+end

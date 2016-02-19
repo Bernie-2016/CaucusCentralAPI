@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217172227) do
+ActiveRecord::Schema.define(version: 20160219184943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "audits", id: :bigserial, force: :cascade do |t|
+    t.integer  "precinct_id"
+    t.integer  "status",           default: 0
+    t.integer  "audit_type"
+    t.text     "supporter_counts"
+    t.text     "reported_results"
+    t.text     "official_results"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
   create_table "invitations", id: :bigserial, force: :cascade do |t|
     t.integer  "sender_id"
