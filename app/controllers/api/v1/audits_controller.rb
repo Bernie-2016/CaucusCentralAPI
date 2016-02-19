@@ -5,7 +5,7 @@ module Api
 
       def index
         render_unauthenticated! unless current_user.organizer? || current_user.admin?
-        audits = Audit.all
+        audits = Audit.all.includes(:precinct)
         audits = audits.where(precinct_id: current_user.state.precincts.pluck(:id)) unless current_user.admin?
         render json: AuditSerializer.root_collection_hash(audits)
       end
