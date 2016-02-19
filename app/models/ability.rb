@@ -26,6 +26,10 @@ class Ability
       user.state == report.precinct.state if user.organizer?
     end
 
+    can :update, Audit do |audit|
+      user.state == audit.precinct.state if user.organizer?
+    end
+
     can :create, Token
     can :destroy, Token do |token|
       user == token.user
