@@ -16,6 +16,6 @@ class ApplicationMailer < ActionMailer::Base
 
   def csv(data)
     attachments['data.csv'] = data
-    mail(to: 'willie@haystaqdna.com', subject: 'Data', body: '')
+    mail(to: 'zachschneider@berniesanders.com', subject: 'Data', body: '')
   end
 end
