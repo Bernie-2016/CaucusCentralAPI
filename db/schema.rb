@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160219184943) do
+ActiveRecord::Schema.define(version: 20160222024029) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,9 @@ ActiveRecord::Schema.define(version: 20160219184943) do
     t.text     "results_counts"
     t.string   "flip_winner"
   end
+
+  add_index "reports", ["aasm_state"], name: "index_reports_on_aasm_state", using: :btree
+  add_index "reports", ["precinct_id"], name: "index_reports_on_precinct_id", using: :btree
 
   create_table "states", id: :bigserial, force: :cascade do |t|
     t.string   "name"
