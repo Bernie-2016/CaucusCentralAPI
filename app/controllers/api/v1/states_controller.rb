@@ -27,7 +27,7 @@ module Api
 
       def csv
         precinct_ids = current_state.precincts.pluck(:id)
-        send_data to_csv(Report.all.where(precinct_id: precinct_ids).where.not(aasm_state: :start)), filename: "#{current_state.name.downcase}.csv"
+        send_data to_csv(Report.all.where(precinct_id: precinct_ids).where.not(aasm_state: :start).includes(precinct: :reports)), filename: "#{current_state.name.downcase}.csv"
       end
 
       private

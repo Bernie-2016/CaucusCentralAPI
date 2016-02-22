@@ -76,7 +76,7 @@ class Report < ActiveRecord::Base
   end
 
   def viable?(key)
-    above_threshold?(key) || precinct.reports.captain.apportionment.exists?(user: user) && precinct.reports.captain.apportionment.find_by(user: user).above_threshold?(key)
+    above_threshold?(key) || precinct.reports.find { |r| r.captain? && r.apportionment? && r.user_id == user_id }.try(:above_threshold?, key)
   end
 
   def calculated_delegates
